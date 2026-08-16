@@ -4,25 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bonjour Mery — Naleśniki, Desery, Śniadania, Kawa | Cieplice Śląskie Zdrój</title>
-<meta name="description" content="Bonjour Mery — nowe miejsce z naleśnikami, deserami, śniadaniami i kawą na Placu Piastowskim w Cieplicach Śląskich Zdroju. Otwarcie 18 sierpnia!">
+<meta name="description" content="Bonjour Mery — kameralna restauracja na Placu Piastowskim w Cieplicach Śląskich Zdroju. Naleśniki, desery, śniadania i kawa. Otwarcie 18 sierpnia.">
+<meta name="theme-color" content="#120e0b">
+<meta property="og:title" content="Bonjour Mery — Cieplice Śląskie Zdrój">
+<meta property="og:description" content="Naleśniki, desery, śniadania i kawa na Placu Piastowskim. Otwarcie 18 sierpnia.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,400;0,500;0,600;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<header class="site-header">
+<a class="skip-link" href="#main-content">Przejdź do treści</a>
+
+<div class="grain" aria-hidden="true"></div>
+
+<header class="site-header" id="site-header">
   <div class="container header-inner">
-    <a href="#top" class="logo">
-      <span class="logo-bonjour">Bonjour</span>
-      <span class="logo-mery">Mery</span>
+    <a href="#top" class="logo" aria-label="Bonjour Mery — strona główna">
+      <svg class="logo-mark" width="34" height="34" viewBox="0 0 34 34" fill="none" aria-hidden="true">
+        <circle cx="17" cy="17" r="15.5" stroke="url(#logoGrad)" stroke-width="1.2"/>
+        <path d="M11 21.5C11 21.5 12.5 13 17 13C21.5 13 23 21.5 23 21.5" stroke="url(#logoGrad)" stroke-width="1.2" stroke-linecap="round"/>
+        <defs>
+          <linearGradient id="logoGrad" x1="2" y1="2" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#E8C77E"/>
+            <stop offset="1" stop-color="#C9765E"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="logo-word">Bonjour&nbsp;Mery</span>
     </a>
     <nav class="main-nav" id="main-nav">
-      <a href="#o-nas">O nas</a>
+      <a href="#o-nas">O&nbsp;nas</a>
       <a href="#menu">Menu</a>
       <a href="#lokalizacja">Lokalizacja</a>
       <a href="#kontakt">Kontakt</a>
-      <a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener" class="nav-insta">Instagram</a>
+      <a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener" class="nav-insta">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+        Instagram
+      </a>
     </nav>
-    <button class="nav-toggle" id="nav-toggle" aria-label="Otwórz menu" aria-expanded="false">
+    <button class="nav-toggle" id="nav-toggle" aria-label="Otwórz menu" aria-expanded="false" aria-controls="main-nav">
       <span></span><span></span><span></span>
     </button>
   </div>
@@ -30,111 +53,183 @@
 
 <main id="top">
 
-  <section class="hero">
-    <div class="hero-bg" aria-hidden="true"></div>
+  <section class="hero" id="main-content">
+    <div class="hero-media" aria-hidden="true">
+      <img
+        class="hero-photo"
+        src="https://images.pexels.com/photos/28704256/pexels-photo-28704256.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        alt=""
+        loading="eager"
+        fetchpriority="high"
+        onerror="this.remove()">
+      <div class="hero-scrim"></div>
+    </div>
+
     <div class="container hero-inner">
-      <div class="hero-badge">Restauracja &middot; Cieplice Śląskie Zdrój</div>
-      <div class="emblem">
-        <div class="emblem-ring">
-          <div class="emblem-core">
-            <span class="emblem-eyebrow">Bonjour</span>
-            <span class="emblem-name">Mery</span>
-            <span class="emblem-sub">Naleśniki &middot; Desery &middot; Śniadania &middot; Kawa</span>
-          </div>
+      <p class="hero-eyebrow reveal" data-reveal>Restauracja &middot; Cieplice Śląskie Zdrój</p>
+      <h1 class="hero-title reveal" data-reveal>
+        <span class="hero-title-pre">Bonjour</span>
+        <span class="hero-title-main">Mery</span>
+      </h1>
+      <p class="hero-tagline reveal" data-reveal>Kawałek Francji na Placu Piastowskim &mdash; cienkie naleśniki, autorskie desery i poranna kawa w sercu Cieplic.</p>
+
+      <div class="opening-row reveal" data-reveal>
+        <div class="opening-text">
+          <span class="opening-label">Otwieramy</span>
+          <span class="opening-date">18 sierpnia<span class="opening-dot">&middot;</span>wtorek</span>
         </div>
-      </div>
-
-      <p class="hero-tagline">Kawałek Francji na Placu Piastowskim — świeże naleśniki, domowe desery i poranna kawa w sercu Cieplic.</p>
-
-      <div id="opening-banner" class="opening-banner">
-        <p class="opening-eyebrow">Otwieramy</p>
-        <p class="opening-date">18 sierpnia — wtorek</p>
-        <div class="countdown" id="countdown" aria-live="polite">
+        <div class="countdown" id="countdown" aria-live="polite" aria-label="Czas do otwarcia">
           <div class="countdown-unit"><span class="countdown-num" id="cd-days">–</span><span class="countdown-label">dni</span></div>
+          <div class="countdown-sep">:</div>
           <div class="countdown-unit"><span class="countdown-num" id="cd-hours">–</span><span class="countdown-label">godz.</span></div>
+          <div class="countdown-sep">:</div>
           <div class="countdown-unit"><span class="countdown-num" id="cd-mins">–</span><span class="countdown-label">min</span></div>
+          <div class="countdown-sep">:</div>
           <div class="countdown-unit"><span class="countdown-num" id="cd-secs">–</span><span class="countdown-label">sek.</span></div>
         </div>
       </div>
 
-      <div class="hero-ctas">
-        <a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener" class="btn btn-primary">Obserwuj nas na Instagramie</a>
+      <div class="hero-ctas reveal" data-reveal>
+        <a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener" class="btn btn-primary">Obserwuj na Instagramie</a>
         <a href="#lokalizacja" class="btn btn-ghost">Zobacz lokalizację</a>
       </div>
     </div>
+
+    <a href="#marquee" class="scroll-cue" aria-label="Przewiń w dół">
+      <span></span>
+    </a>
   </section>
+
+  <div class="marquee" id="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Naleśniki</span><span class="dot">&middot;</span>
+      <span>Desery</span><span class="dot">&middot;</span>
+      <span>Śniadania</span><span class="dot">&middot;</span>
+      <span>Kawa</span><span class="dot">&middot;</span>
+      <span>Plac Piastowski</span><span class="dot">&middot;</span>
+      <span>Cieplice Śląskie Zdrój</span><span class="dot">&middot;</span>
+      <span>Naleśniki</span><span class="dot">&middot;</span>
+      <span>Desery</span><span class="dot">&middot;</span>
+      <span>Śniadania</span><span class="dot">&middot;</span>
+      <span>Kawa</span><span class="dot">&middot;</span>
+      <span>Plac Piastowski</span><span class="dot">&middot;</span>
+      <span>Cieplice Śląskie Zdrój</span><span class="dot">&middot;</span>
+    </div>
+  </div>
 
   <section id="o-nas" class="section about">
     <div class="container about-grid">
-      <div class="about-text">
-        <p class="eyebrow">O nas</p>
-        <h2>Bonjour Mery</h2>
-        <p>Bonjour Mery to nowe miejsce na kulinarnej mapie Cieplic Śląskich Zdroju — kameralna restauracja przy Placu Piastowskim, w której francuska lekkość spotyka się z domowym ciepłem.</p>
-        <p>Stawiamy na proste, dobrze zrobione rzeczy: cienkie naleśniki podane na wiele sposobów, autorskie desery, sycące śniadania i aromatyczną kawę — w klimatycznym wnętrzu, blisko Parku Zdrojowego i deptaku.</p>
-        <p class="about-note">Jesteśmy w trakcie ostatnich przygotowań przed otwarciem — dziękujemy za cierpliwość, już niedługo czekamy na Was na miejscu! ✨</p>
+      <div class="about-media reveal" data-reveal>
+        <img
+          src="https://images.pexels.com/photos/19280134/pexels-photo-19280134.jpeg?auto=compress&cs=tinysrgb&w=1200"
+          alt="Elegancka fasada kameralnego francuskiego bistro"
+          loading="lazy"
+          width="600" height="750"
+          onerror="this.closest('.about-media').classList.add('media-fallback')">
+        <div class="about-media-frame" aria-hidden="true"></div>
       </div>
-      <div class="about-visual" aria-hidden="true">
-        <div class="visual-card visual-card-1">
-          <span class="visual-icon">📍</span>
-          <p>Plac Piastowski<br>Cieplice Śląskie Zdrój</p>
-        </div>
-        <div class="visual-card visual-card-2">
-          <span class="visual-icon">🥞</span>
-          <p>Naleśniki na słodko<br>i wytrawnie</p>
-        </div>
-        <div class="visual-card visual-card-3">
-          <span class="visual-icon">☕</span>
-          <p>Kawa i śniadania<br>każdego dnia</p>
-        </div>
+      <div class="about-text">
+        <p class="eyebrow reveal" data-reveal>O&nbsp;nas</p>
+        <h2 class="reveal" data-reveal>Miejsce, które<br>pachnie&nbsp;Francją</h2>
+        <p class="lead reveal" data-reveal>Bonjour Mery to nowe miejsce na kulinarnej mapie Cieplic Śląskich Zdroju &mdash; kameralna restauracja przy Placu Piastowskim, w której francuska lekkość spotyka się z domowym ciepłem.</p>
+        <p class="reveal" data-reveal>Stawiamy na proste, dobrze zrobione rzeczy: cienkie naleśniki podane na wiele sposobów, autorskie desery, sycące śniadania i aromatyczną kawę &mdash; w klimatycznym wnętrzu, blisko Parku Zdrojowego i deptaku.</p>
+        <blockquote class="pull-quote reveal" data-reveal>
+          <span class="quote-mark" aria-hidden="true">&ldquo;</span>
+          Jesteśmy w trakcie ostatnich przygotowań przed otwarciem &mdash; dziękujemy za cierpliwość, już niedługo czekamy na Was na miejscu.
+        </blockquote>
       </div>
     </div>
   </section>
 
   <section id="menu" class="section menu">
     <div class="container">
-      <p class="eyebrow center">Nasza oferta</p>
-      <h2 class="center">Co znajdziecie w karcie</h2>
+      <div class="section-head reveal" data-reveal>
+        <p class="eyebrow">Nasza oferta</p>
+        <h2>Co znajdziecie w karcie</h2>
+      </div>
       <div class="menu-grid">
-        <div class="menu-card">
-          <div class="menu-icon">🥞</div>
+        <article class="menu-card reveal" data-reveal>
+          <svg class="menu-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <ellipse cx="20" cy="26" rx="12" ry="3.2"/>
+            <ellipse cx="20" cy="21.5" rx="12" ry="3.2"/>
+            <ellipse cx="20" cy="17" rx="12" ry="3.2"/>
+            <path d="M25 12c2 1.4 2 3 0 4" stroke-linecap="round"/>
+          </svg>
           <h3>Naleśniki</h3>
-          <p>Cienkie, francuskie naleśniki na słodko i wytrawnie — klasyka w nowej odsłonie.</p>
-        </div>
-        <div class="menu-card">
-          <div class="menu-icon">🍓</div>
+          <p>Cienkie, francuskie naleśniki na słodko i wytrawnie &mdash; klasyka w nowej odsłonie.</p>
+        </article>
+        <article class="menu-card reveal" data-reveal>
+          <svg class="menu-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <path d="M11 28 20 10 29 28Z" stroke-linejoin="round"/>
+            <path d="M14.5 21h11" />
+            <circle cx="20" cy="15.5" r="1.4" fill="currentColor" stroke="none"/>
+            <circle cx="17" cy="18.5" r="1.1" fill="currentColor" stroke="none"/>
+            <circle cx="23" cy="18.5" r="1.1" fill="currentColor" stroke="none"/>
+          </svg>
           <h3>Desery</h3>
-          <p>Domowe słodkości z sezonowymi owocami — idealne na kawę po południu.</p>
-        </div>
-        <div class="menu-card">
-          <div class="menu-icon">🍳</div>
+          <p>Domowe słodkości z sezonowymi owocami &mdash; idealne na kawę po południu.</p>
+        </article>
+        <article class="menu-card reveal" data-reveal>
+          <svg class="menu-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <path d="M9 26c3-9 19-9 22 0" stroke-linecap="round"/>
+            <path d="M7 26h26" stroke-linecap="round"/>
+            <path d="M20 8v4M14 9.5l1.6 3.4M26 9.5l-1.6 3.4" stroke-linecap="round"/>
+          </svg>
           <h3>Śniadania</h3>
           <p>Sycące śniadania na dobry początek dnia, serwowane w przytulnym wnętrzu.</p>
-        </div>
-        <div class="menu-card">
-          <div class="menu-icon">☕</div>
+        </article>
+        <article class="menu-card reveal" data-reveal>
+          <svg class="menu-icon" width="40" height="40" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+            <path d="M10 17h16v6a8 8 0 0 1-8 8 8 8 0 0 1-8-8Z"/>
+            <path d="M26 19h2.5a3 3 0 0 1 0 6H26"/>
+            <path d="M15 10c-1.3 1.3-1.3 2.3 0 3.6M20 10c-1.3 1.3-1.3 2.3 0 3.6" stroke-linecap="round"/>
+          </svg>
           <h3>Kawa</h3>
           <p>Aromatyczna kawa do naleśników, deserów albo na wynos.</p>
-        </div>
+        </article>
       </div>
-      <p class="menu-note">Pełne menu i ceny opublikujemy wkrótce na naszym Instagramie — zaglądajcie!</p>
+      <p class="menu-note reveal" data-reveal>Pełne menu i ceny opublikujemy wkrótce na naszym Instagramie.</p>
+    </div>
+  </section>
+
+  <section class="section statement">
+    <div class="statement-media" aria-hidden="true">
+      <img
+        src="https://images.pexels.com/photos/31323486/pexels-photo-31323486.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        alt=""
+        loading="lazy"
+        onerror="this.remove()">
+      <div class="statement-scrim"></div>
+    </div>
+    <div class="container statement-inner">
+      <p class="statement-text reveal" data-reveal>Zwolnijcie na&nbsp;chwilę.<br><em>Naleśnik, kawa</em> i&nbsp;kawałek Placu Piastowskiego.</p>
     </div>
   </section>
 
   <section id="lokalizacja" class="section location">
     <div class="container location-grid">
-      <div class="location-info">
+      <div class="location-info reveal" data-reveal>
         <p class="eyebrow">Lokalizacja</p>
         <h2>Znajdziecie nas na Placu Piastowskim</h2>
         <ul class="location-details">
-          <li><span class="detail-label">Adres</span>Plac Piastowski 21C<br>58-560 Cieplice Śląskie Zdrój (Jelenia Góra)</li>
-          <li><span class="detail-label">Godziny otwarcia</span>Podamy wkrótce — śledźcie nasz Instagram</li>
-          <li><span class="detail-label">Kontakt</span><a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener">@bonjour.mery</a></li>
+          <li>
+            <svg class="detail-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M12 21s7-6.1 7-11.5A7 7 0 0 0 5 9.5C5 14.9 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.4"/></svg>
+            <div><span class="detail-label">Adres</span>Plac Piastowski 21C<br>58-560 Cieplice Śląskie Zdrój (Jelenia Góra)</div>
+          </li>
+          <li>
+            <svg class="detail-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2" stroke-linecap="round"/></svg>
+            <div><span class="detail-label">Godziny otwarcia</span>Podamy wkrótce &mdash; śledźcie nasz Instagram</div>
+          </li>
+          <li>
+            <svg class="detail-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1"/></svg>
+            <div><span class="detail-label">Kontakt</span><a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener">@bonjour.mery</a></div>
+          </li>
         </ul>
         <a href="https://www.google.com/maps/search/?api=1&query=Plac+Piastowski+21C+Cieplice+%C5%9Al%C4%85skie+Zdr%C3%B3j" target="_blank" rel="noopener" class="btn btn-primary">Wyznacz trasę</a>
       </div>
-      <div class="location-map">
+      <div class="location-map reveal" data-reveal>
         <iframe
-          title="Mapa — Bonjour Mery, Plac Piastowski 21C, Cieplice Śląskie Zdrój"
+          title="Mapa &mdash; Bonjour Mery, Plac Piastowski 21C, Cieplice Śląskie Zdrój"
           src="https://www.google.com/maps?q=Plac+Piastowski+21C+Cieplice+%C5%9Al%C4%85skie+Zdr%C3%B3j&output=embed"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade">
@@ -145,10 +240,10 @@
 
   <section id="kontakt" class="section contact">
     <div class="container contact-inner">
-      <p class="eyebrow center">Bądźmy w kontakcie</p>
-      <h2 class="center">Do zobaczenia na miejscu!</h2>
-      <p class="contact-text">Najświeższe informacje o otwarciu, menu i wydarzeniach publikujemy na Instagramie. Zajrzyjcie i zostańcie z nami na dłużej.</p>
-      <a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener" class="btn btn-primary btn-large">
+      <p class="eyebrow center reveal" data-reveal>Bądźmy w kontakcie</p>
+      <h2 class="center reveal" data-reveal>Do zobaczenia<br>na miejscu</h2>
+      <p class="contact-text reveal" data-reveal>Najświeższe informacje o otwarciu, menu i wydarzeniach publikujemy na Instagramie.</p>
+      <a href="https://www.instagram.com/bonjour.mery/" target="_blank" rel="noopener" class="btn btn-primary btn-large reveal" data-reveal>
         Obserwuj @bonjour.mery
       </a>
     </div>
@@ -158,7 +253,7 @@
 
 <footer class="site-footer">
   <div class="container footer-inner">
-    <div class="footer-logo">Bonjour Mery</div>
+    <div class="footer-logo">Bonjour&nbsp;Mery</div>
     <p>Plac Piastowski 21C &middot; Cieplice Śląskie Zdrój</p>
     <p class="footer-copy">&copy; <span id="year"></span> Bonjour Mery. Wszelkie prawa zastrzeżone.</p>
   </div>
