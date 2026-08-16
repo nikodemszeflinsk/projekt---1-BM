@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Karla:wght@400;500;600&display=swap" rel="stylesheet" />
+<script src="./image-slot.js"></script>
+<meta name="ext-resource-dependency" content="uploads/pasted-1786901244684-0.png" />
+<meta name="ext-resource-dependency" content="uploads/pasted-1786901384093-0.png" />
+<meta name="ext-resource-dependency" content="uploads/pasted-1786901431764-0.png" />
+<meta name="ext-resource-dependency" content="uploads/pasted-1786901484107-0.png" />
+<meta name="ext-resource-dependency" content="uploads/pasted-1786901617019-0.png" />
+<style>
+  body { margin: 0; background: #FAF4EA; -webkit-font-smoothing: antialiased; }
+  a { color: #1E3A2F; text-decoration: none; }
+  a:hover { color: #A98A54; }
+  ::selection { background: #E9CFC7; }
+  @keyframes bmFade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1E3A2F"></rect><text x="50" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#E9CFC7">BM</text></svg></template>
+<div style="font-family: Karla, Helvetica, sans-serif; color: #2A2622; background: #FAF4EA; overflow-x: hidden">
+
+  <header style="position: sticky; top: 0; z-index: 40; background: rgba(250,244,234,0.9); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(30,58,47,0.12)">
+    <nav style="max-width: 1180px; margin: 0 auto; padding: 14px 22px; display: flex; flex-wrap: wrap; align-items: center; gap: 12px 26px">
+      <a href="#top" style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 25px; letter-spacing: 0.04em; color: #1E3A2F; line-height: 1; margin-right: auto">Bonjour&nbsp;Mery<span style="color: #A98A54">.</span></a>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; letter-spacing: 0.09em; text-transform: uppercase">
+        <a href="#o-nas" style="color: #4A443C">O nas</a>
+        <a href="#menu" style="color: #4A443C">Menu</a>
+        <a href="#godziny" style="color: #4A443C">Godziny</a>
+        <a href="#galeria" style="color: #4A443C">Galeria</a>
+        <a href="#kontakt" style="color: #4A443C">Kontakt</a>
+      </div>
+      <a href="{{ reservationUrl }}" target="_blank" rel="noopener" style="background: #1E3A2F; color: #FAF4EA; padding: 11px 20px; border-radius: 999px; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase" style-hover="background: #A98A54; color: #FFFDF8">Zarezerwuj stolik</a>
+    </nav>
+  </header>
+
+  <section id="top" data-screen-label="Hero" style="position: relative; min-height: min(88vh, 780px); display: grid; align-items: center; overflow: hidden">
+    <div style="position: absolute; inset: 0">
+      <image-slot id="bm-hero" shape="rect" fit="cover" src="uploads/pasted-1786900696196-0.png" placeholder="zdjęcie wnętrza / stołu śniadaniowego — morning light, poziome, min. 2000px"></image-slot>
+    </div>
+    <div style="position: absolute; inset: 0; background: linear-gradient(105deg, rgba(250,244,234,0.96) 0%, rgba(250,244,234,0.86) 42%, rgba(250,244,234,0.18) 78%, rgba(250,244,234,0) 100%); pointer-events: none"></div>
+    <div style="position: relative; max-width: 1180px; width: 100%; margin: 0 auto; padding: clamp(56px, 9vw, 120px) 22px">
+      <div style="max-width: 620px; animation: bmFade 0.9s ease both">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 22px">
+          <span style="width: 44px; height: 1px; background: #A98A54"></span>
+          <span style="font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: #A98A54">Cieplice · Plac Piastowski 21C</span>
+        </div>
+        <h1 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(48px, 9vw, 96px); line-height: 0.94; letter-spacing: -0.01em; margin: 0 0 18px; color: #1E3A2F">Bonjour Mery</h1>
+        <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: clamp(22px, 3.4vw, 32px); line-height: 1.35; color: #3E5B4C; margin: 0 0 14px">Bonjour! Śniadanie po francusku,<br />z uzdrowiskowym spokojem.</p>
+        <p style="font-size: 16px; line-height: 1.75; color: #5C554C; max-width: 470px; margin: 0 0 34px; text-wrap: pretty">Croissanty, crêpes i kawa speciality w sercu Cieplic. Otwieramy dzień o 9:00 — z filiżanką cappuccino, tak jak Marysieńka.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px">
+          <a href="#menu" style="background: #1E3A2F; color: #FAF4EA; padding: 16px 30px; border-radius: 999px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase" style-hover="background: #14291F">Zobacz menu</a>
+          <a href="#kontakt" style="border: 1px solid rgba(30,58,47,0.35); color: #1E3A2F; padding: 16px 30px; border-radius: 999px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase" style-hover="border-color: #A98A54; color: #A98A54">Znajdź nas</a>
+        </div>
+      </div>
+    </div>
+    <div style="position: absolute; right: 22px; bottom: 22px; background: rgba(250,244,234,0.92); border: 1px solid rgba(169,138,84,0.35); border-radius: 4px; padding: 10px 16px; font-size: 13px; letter-spacing: 0.06em; color: #1E3A2F">Śniadania 9:00–13:00</div>
+  </section>
+
+  <section id="o-nas" data-screen-label="O nas" style="padding: clamp(64px, 10vw, 128px) 22px; background: #F6ECE0">
+    <div style="max-width: 1180px; margin: 0 auto; display: grid; gap: clamp(36px, 6vw, 72px); grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); align-items: start">
+      <div>
+        <p style="font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: #A98A54; margin: 0 0 20px">O nas</p>
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margin: 0 0 26px; color: #1E3A2F">Marysieńka<br />z filiżanką cappuccino</h2>
+        <p style="font-size: 17px; line-height: 1.8; color: #554E45; margin: 0 0 18px; text-wrap: pretty">Nasze imię pochodzi od Marysieńki Sobieskiej — królowej, która przywiozła do Polski francuski gust i kazała bywalcom dworu pokochać poranną kawę. Jej stylizowany portret, z filiżanką cappuccino w dłoni, wita gości na ścianie lokalu.</p>
+        <p style="font-size: 17px; line-height: 1.8; color: #554E45; margin: 0 0 30px; text-wrap: pretty">Reszta jest już całkiem współczesna: masło z małej mleczarni, ciasto na crêpes odpoczywające od wieczora, kawa palona w Polsce i stoliki, przy których nikt nie pogania. Paryska kawiarnia w uzdrowiskowym rytmie Cieplic.</p>
+        <div style="display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); border-top: 1px solid rgba(30,58,47,0.15); padding-top: 26px">
+          <div>
+            <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; color: #1E3A2F; margin: 0">9:00</p>
+            <p style="font-size: 13px; letter-spacing: 0.08em; color: #7A7268; margin: 4px 0 0">Otwieramy codziennie</p>
+          </div>
+          <div>
+            <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; color: #1E3A2F; margin: 0">100%</p>
+            <p style="font-size: 13px; letter-spacing: 0.08em; color: #7A7268; margin: 4px 0 0">Wypieki z naszej kuchni</p>
+          </div>
+          <div>
+            <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; color: #1E3A2F; margin: 0">21C</p>
+            <p style="font-size: 13px; letter-spacing: 0.08em; color: #7A7268; margin: 4px 0 0">Plac Piastowski, Cieplice</p>
+          </div>
+        </div>
+      </div>
+      <div style="display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-width: 0">
+        <div style="grid-column: span 2; position: relative; aspect-ratio: 4 / 3; min-width: 0; overflow: hidden; border: 1px solid rgba(169,138,84,0.4); padding: 10px; background: #FAF4EA">
+          <image-slot id="bm-portret" shape="rect" src="uploads/pasted-1786901050133-0.png" placeholder="portret Marysieńki z cappuccino (obraz z wnętrza lokalu)"></image-slot>
+        </div>
+        <div style="aspect-ratio: 1 / 1; min-width: 0; overflow: hidden">
+          <image-slot id="bm-about-1" shape="rounded" radius="2" src="uploads/pasted-1786901069014-0.png" placeholder="detal stolika / croissant"></image-slot>
+        </div>
+        <div style="aspect-ratio: 1 / 1; min-width: 0; overflow: hidden">
+          <image-slot id="bm-about-2" shape="rounded" radius="2" src="uploads/pasted-1786901119259-0.png" placeholder="wnętrze, mosiężne detale"></image-slot>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="menu" data-screen-label="Menu" style="padding: clamp(64px, 10vw, 128px) 22px; background: #FAF4EA">
+    <div style="max-width: 1180px; margin: 0 auto">
+      <div style="text-align: center; max-width: 620px; margin: 0 auto clamp(38px, 5vw, 60px)">
+        <p style="font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: #A98A54; margin: 0 0 18px">Carte du jour</p>
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margin: 0 0 16px; color: #1E3A2F">Menu</h2>
+        <p style="font-size: 16px; line-height: 1.7; color: #5C554C; margin: 0">Śniadania podajemy do 13:00. Karta zmienia się z sezonem — dopytaj o propozycję dnia.</p>
+      </div>
+
+      <sc-if value="{{ tabsMode }}" hint-placeholder-val="{{ true }}">
+        <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-bottom: clamp(34px, 5vw, 56px)">
+          <sc-for list="{{ categories }}" as="cat" hint-placeholder-count="5">
+            <button type="button" onClick="{{ cat.onSelect }}" style="{{ cat.tabStyle }}">{{ cat.name }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <div style="display: grid; gap: clamp(40px, 6vw, 72px)">
+        <sc-for list="{{ visibleCategories }}" as="cat" hint-placeholder-count="1">
+          <div style="display: grid; gap: clamp(24px, 4vw, 54px); grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); align-items: start">
+            <div style="position: sticky; top: 96px">
+              <h3 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(28px, 3.6vw, 40px); color: #1E3A2F; margin: 0 0 12px">{{ cat.name }}</h3>
+              <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 19px; color: #A98A54; margin: 0 0 18px">{{ cat.french }}</p>
+              <p style="font-size: 15px; line-height: 1.75; color: #6B6359; margin: 0 0 22px; max-width: 320px">{{ cat.note }}</p>
+              <div style="aspect-ratio: 3 / 2; max-width: 360px; min-width: 0; overflow: hidden">
+                <image-slot id="{{ cat.slotId }}" shape="rounded" radius="2" src="{{ cat.slotSrc }}" placeholder="{{ cat.slotHint }}"></image-slot>
+              </div>
+            </div>
+            <div style="grid-column: span 2; display: grid; gap: 2px; min-width: 0">
+              <sc-for list="{{ cat.items }}" as="item" hint-placeholder-count="5">
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px 18px; align-items: baseline; padding: 17px 0; border-bottom: 1px solid rgba(30,58,47,0.12)">
+                  <div style="min-width: 0">
+                    <p style="font-size: 18px; font-weight: 500; color: #26221E; margin: 0 0 5px; letter-spacing: 0.01em">{{ item.name }}</p>
+                    <p style="font-size: 14.5px; line-height: 1.6; color: #7A7268; margin: 0; text-wrap: pretty">{{ item.desc }}</p>
+                  </div>
+                  <sc-if value="{{ showPrices }}" hint-placeholder-val="{{ true }}">
+                    <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 22px; color: #1E3A2F; margin: 0; white-space: nowrap">{{ item.price }}</p>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="godziny" data-screen-label="Godziny" style="padding: clamp(64px, 10vw, 120px) 22px; background: #1E3A2F; color: #F3E8DA">
+    <div style="max-width: 1180px; margin: 0 auto; display: grid; gap: clamp(34px, 6vw, 72px); grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); align-items: center">
+      <div>
+        <p style="font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: #C7A96B; margin: 0 0 18px">Godziny otwarcia</p>
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margin: 0 0 22px">Otwarte codziennie<br />od dziewiątej</h2>
+        <p style="font-size: 16.5px; line-height: 1.8; color: rgba(243,232,218,0.78); margin: 0 0 26px; max-width: 420px">Śniadania serwujemy od 9:00 do 13:00. Później zostaje cała karta crêpes, deserów i kawy — do wieczora.</p>
+        <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 21px; color: #E9CFC7; margin: 0">{{ todayLine }}</p>
+      </div>
+      <div style="background: rgba(250,244,234,0.06); border: 1px solid rgba(199,169,107,0.35); padding: clamp(22px, 3vw, 36px)">
+        <sc-for list="{{ hours }}" as="row" hint-placeholder-count="3">
+          <div style="{{ row.rowStyle }}">
+            <span style="font-size: 15px; letter-spacing: 0.06em">{{ row.days }}</span>
+            <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px">{{ row.time }}</span>
+          </div>
+        </sc-for>
+        <div style="display: flex; justify-content: space-between; gap: 16px; padding: 16px 0 0; margin-top: 8px; border-top: 1px solid rgba(199,169,107,0.35)">
+          <span style="font-size: 15px; letter-spacing: 0.06em; color: #C7A96B">Śniadania</span>
+          <span style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 21px; color: #C7A96B">9:00–13:00</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="galeria" data-screen-label="Galeria" style="padding: clamp(64px, 10vw, 128px) 22px; background: #F6ECE0">
+    <div style="max-width: 1180px; margin: 0 auto">
+      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: clamp(28px, 4vw, 46px)">
+        <div>
+          <p style="font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: #A98A54; margin: 0 0 16px">Galeria</p>
+          <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margin: 0; color: #1E3A2F">Poranki u Mery</h2>
+        </div>
+        <a href="{{ facebookUrl }}" target="_blank" rel="noopener" style="font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; border-bottom: 1px solid #A98A54; padding-bottom: 4px">Więcej na Facebooku</a>
+      </div>
+      <div style="display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(min(230px, 100%), 1fr))">
+        <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden"><image-slot id="bm-gal-1" shape="rounded" radius="2" src="uploads/pasted-1786901384093-0.png" placeholder="wnętrze, pionowe"></image-slot></div>
+        <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden"><image-slot id="bm-gal-2" shape="rounded" radius="2" src="uploads/pasted-1786901244684-0.png" placeholder="croque madame"></image-slot></div>
+        <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden"><image-slot id="bm-gal-3" shape="rounded" radius="2" src="uploads/pasted-1786901431764-0.png" placeholder="crêpe suzette"></image-slot></div>
+        <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden"><image-slot id="bm-gal-4" shape="rounded" radius="2" src="uploads/pasted-1786901617019-0.png" placeholder="latte art / barista"></image-slot></div>
+        <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden"><image-slot id="bm-gal-5" shape="rounded" radius="2" src="uploads/pasted-1786901484107-0.png" placeholder="deser, blat marmurowy"></image-slot></div>
+        <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden"><image-slot id="bm-gal-6" shape="rounded" radius="2" src="uploads/pasted-1786901069014-0.png" placeholder="witryna / szyld lokalu"></image-slot></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="kontakt" data-screen-label="Kontakt" style="padding: clamp(64px, 10vw, 128px) 22px; background: #FAF4EA">
+    <div style="max-width: 1180px; margin: 0 auto; display: grid; gap: clamp(30px, 5vw, 60px); grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); align-items: start">
+      <div>
+        <p style="font-size: 12px; letter-spacing: 0.28em; text-transform: uppercase; color: #A98A54; margin: 0 0 18px">Lokalizacja i kontakt</p>
+        <h2 style="font-family: 'Cormorant Garamond', Georgia, serif; font-weight: 500; font-size: clamp(34px, 5vw, 54px); line-height: 1.08; margin: 0 0 28px; color: #1E3A2F">Plac Piastowski 21C<br />Cieplice, Jelenia Góra</h2>
+        <div style="display: grid; gap: 20px; max-width: 420px">
+          <div style="display: grid; grid-template-columns: 118px 1fr; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(30,58,47,0.14)">
+            <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #8C8478; padding-top: 4px">Adres</span>
+            <span style="font-size: 16.5px; line-height: 1.6">Plac Piastowski 21C<br />58-560 Jelenia Góra — Cieplice</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 118px 1fr; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(30,58,47,0.14)">
+            <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #8C8478; padding-top: 4px">Telefon</span>
+            <a href="tel:+48000000000" style="font-size: 16.5px">+48 000 000 000</a>
+          </div>
+          <div style="display: grid; grid-template-columns: 118px 1fr; gap: 14px; padding-bottom: 18px; border-bottom: 1px solid rgba(30,58,47,0.14)">
+            <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #8C8478; padding-top: 4px">E-mail</span>
+            <a href="mailto:bonjour@bonjourmery.pl" style="font-size: 16.5px">bonjour@bonjourmery.pl</a>
+          </div>
+          <div style="display: grid; grid-template-columns: 118px 1fr; gap: 14px">
+            <span style="font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: #8C8478; padding-top: 4px">Rezerwacje</span>
+            <a href="{{ reservationUrl }}" target="_blank" rel="noopener" style="font-size: 16.5px">Napisz do nas na Facebooku</a>
+          </div>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px">
+          <a href="{{ mapUrl }}" target="_blank" rel="noopener" style="background: #1E3A2F; color: #FAF4EA; padding: 15px 28px; border-radius: 999px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase" style-hover="background: #14291F">Otwórz w mapach</a>
+          <a href="{{ facebookUrl }}" target="_blank" rel="noopener" style="border: 1px solid rgba(30,58,47,0.35); color: #1E3A2F; padding: 15px 28px; border-radius: 999px; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase" style-hover="border-color: #A98A54; color: #A98A54">Facebook</a>
+        </div>
+      </div>
+      <div>
+        <div style="position: relative; aspect-ratio: 4 / 3; min-width: 0; overflow: hidden; border: 1px solid rgba(169,138,84,0.4); padding: 10px; background: #F6ECE0">
+          <iframe title="Mapa — Plac Piastowski 21C, Cieplice" src="https://www.google.com/maps?q=Plac%20Piastowski%2021C%2C%2058-560%20Jelenia%20G%C3%B3ra&amp;z=16&amp;output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" style="width: 100%; height: 100%; border: 0; display: block; filter: saturate(0.82) contrast(0.96)"></iframe>
+        </div>
+        <p style="font-size: 14px; line-height: 1.7; color: #7A7268; margin: 14px 0 0">Wejście od strony parku zdrojowego, 3 minuty od Muzeum Przyrodniczego. Parking na Placu Piastowskim.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer data-screen-label="Stopka" style="background: #1E3A2F; color: rgba(243,232,218,0.8); padding: clamp(48px, 7vw, 82px) 22px 34px">
+    <div style="max-width: 1180px; margin: 0 auto">
+      <div style="display: grid; gap: 34px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); padding-bottom: 40px; border-bottom: 1px solid rgba(199,169,107,0.3)">
+        <div>
+          <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-size: 30px; color: #F3E8DA; margin: 0 0 12px; letter-spacing: 0.03em">Bonjour Mery<span style="color: #C7A96B">.</span></p>
+          <p style="font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 18px; color: rgba(233,207,199,0.9); margin: 0">Kawiarnia śniadaniowa w Cieplicach</p>
+        </div>
+        <div style="display: grid; gap: 10px; align-content: start; font-size: 15px">
+          <span style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #C7A96B; margin-bottom: 4px">Odwiedź</span>
+          <span>Plac Piastowski 21C</span>
+          <span>58-560 Jelenia Góra — Cieplice</span>
+          <a href="{{ mapUrl }}" target="_blank" rel="noopener" style="color: rgba(243,232,218,0.8); text-decoration: underline; text-underline-offset: 4px" style-hover="color: #C7A96B">Wskazówki dojazdu</a>
+        </div>
+        <div style="display: grid; gap: 10px; align-content: start; font-size: 15px">
+          <span style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #C7A96B; margin-bottom: 4px">Godziny</span>
+          <span>Pon–Czw 9:00–20:00</span>
+          <span>Pt–Nd 9:00–21:00</span>
+          <span style="color: #E9CFC7">Śniadania 9:00–13:00</span>
+        </div>
+        <div style="display: grid; gap: 10px; align-content: start; font-size: 15px">
+          <span style="font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #C7A96B; margin-bottom: 4px">Social</span>
+          <a href="{{ facebookUrl }}" target="_blank" rel="noopener" style="color: rgba(243,232,218,0.8)" style-hover="color: #C7A96B">Facebook</a>
+          <a href="{{ instagramUrl }}" target="_blank" rel="noopener" style="color: rgba(243,232,218,0.8)" style-hover="color: #C7A96B">Instagram</a>
+          <a href="mailto:bonjour@bonjourmery.pl" style="color: rgba(243,232,218,0.8)" style-hover="color: #C7A96B">bonjour@bonjourmery.pl</a>
+        </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px 26px; justify-content: space-between; padding-top: 26px; font-size: 13px; color: rgba(243,232,218,0.55)">
+        <span>© 2026 Bonjour Mery. Wszystkie prawa zastrzeżone.</span>
+        <span>Polityka prywatności · Regulamin</span>
+      </div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;menuLayout&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Zakładki&quot;,&quot;Wszystko naraz&quot;],&quot;default&quot;:&quot;Zakładki&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Menu&quot;},&quot;showPrices&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Menu&quot;},&quot;facebookUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://www.facebook.com/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Linki&quot;},&quot;instagramUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://www.instagram.com/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Linki&quot;},&quot;mapUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://maps.google.com/?q=Plac+Piastowski+21C+Cieplice+Jelenia+G%C3%B3ra&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Linki&quot;}}">
+class Component extends DCLogic {
+  state = { cat: 0 };
+
+  data() {
+    return [
+      { name: "Śniadania", french: "Les petits déjeuners", note: "Podajemy 9:00–13:00, na ciepłym pieczywie z naszej kuchni.", slotId: "bm-menu-1", slotHint: "croque madame z bliska", slotSrc: "uploads/pasted-1786901244684-0.png",
+        items: [
+          { name: "Croque Madame", desc: "Tost z szynką, beszamelem, gruyère i jajkiem sadzonym", price: "34 zł" },
+          { name: "Tost Benedyktyński", desc: "Brioche, jajka w koszulkach, sos holenderski, szczypiorek", price: "36 zł" },
+          { name: "Omlet ziołowy z chèvre", desc: "Trzy jajka, kozi ser, świeże zioła, sałatka z winegretem", price: "29 zł" },
+          { name: "Croissant z masłem i konfiturą", desc: "Wypiekany codziennie, konfitura z sezonowych owoców", price: "16 zł" },
+          { name: "Miska jogurtowa Mery", desc: "Jogurt grecki, domowa granola, gruszka, miód z Karkonoszy", price: "24 zł" }
+        ] },
+      { name: "Crêpes", french: "Les crêpes", note: "Ciasto odpoczywa od wieczora — stąd cieniutkie, koronkowe brzegi.", slotId: "bm-menu-2", slotHint: "crêpe suzette flambé", slotSrc: "uploads/pasted-1786901384093-0.png",
+        items: [
+          { name: "Crêpe Suzette", desc: "Sos pomarańczowy z Grand Marnier, skórka cytrusowa", price: "27 zł" },
+          { name: "Crêpe z szynką i serem", desc: "Wytrawna, gruyère, szynka dojrzewająca, jajko", price: "28 zł" },
+          { name: "Crêpe ze szpinakiem i chèvre", desc: "Wytrawna, szpinak, kozi ser, orzechy włoskie", price: "30 zł" },
+          { name: "Crêpe z czekoladą i bananem", desc: "Czekolada z Lyonu, banan, prażone migdały", price: "25 zł" },
+          { name: "Crêpe Citron", desc: "Klasyk: cytryna i cukier trzcinowy", price: "19 zł" }
+        ] },
+      { name: "Pancakes", french: "Les pancakes", note: "Puszyste, po amerykańsku — trzy sztuki na porcję.", slotId: "bm-menu-3", slotHint: "stos pancakes z owocami", slotSrc: "uploads/pasted-1786901431764-0.png",
+        items: [
+          { name: "Pancakes klasyczne", desc: "Masło, syrop klonowy, cukier puder", price: "26 zł" },
+          { name: "Pancakes z owocami i mascarpone", desc: "Sezonowe owoce, mascarpone, sos malinowy", price: "32 zł" },
+          { name: "Pancakes czekoladowe", desc: "Kakao, sos z gorzkiej czekolady, bita śmietana", price: "30 zł" }
+        ] },
+      { name: "Desery", french: "Les desserts", note: "Witryna zmienia się codziennie — zapytaj o wypiek dnia.", slotId: "bm-menu-4", slotHint: "witryna z ciastami", slotSrc: "uploads/pasted-1786901484107-0.png",
+        items: [
+          { name: "Tarta cytrynowa z bezą", desc: "Krucha tarta, lemon curd, opalana beza", price: "19 zł" },
+          { name: "Éclair kawowy", desc: "Krem kawowy na naszym espresso", price: "16 zł" },
+          { name: "Crème brûlée", desc: "Wanilia Bourbon, karmelizowana skorupka", price: "22 zł" },
+          { name: "Sernik lawendowy", desc: "Delikatna lawenda, biała czekolada", price: "20 zł" }
+        ] },
+      { name: "Napoje", french: "Les boissons", note: "Kawa speciality palona w Polsce, alternatywy roślinne bez dopłaty.", slotId: "bm-menu-5", slotHint: "cappuccino z latte art", slotSrc: "uploads/pasted-1786901617019-0.png",
+        items: [
+          { name: "Espresso / Doppio", desc: "Ziarno sezonowe, single origin", price: "9 / 12 zł" },
+          { name: "Cappuccino", desc: "Klasyczne, 180 ml", price: "14 zł" },
+          { name: "Flat white", desc: "Podwójne ristretto, aksamitne mleko", price: "16 zł" },
+          { name: "Filtr / Chemex", desc: "Parzone ręcznie, karafka na dwie osoby", price: "18 zł" },
+          { name: "Matcha latte", desc: "Ceremonialna matcha, mleko do wyboru", price: "18 zł" },
+          { name: "Lemonada domowa", desc: "Cytryna i rozmaryn lub malina i mięta", price: "16 zł" },
+          { name: "Świeży sok", desc: "Pomarańcza lub jabłko z gruszką", price: "18 zł" },
+          { name: "Czekolada na gorąco", desc: "Gęsta, francuska, z bitą śmietaną", price: "17 zł" }
+        ] }
+    ];
+  }
+
+  renderVals() {
+    const cats = this.data();
+    const tabsMode = (this.props.menuLayout ?? "Zakładki") === "Zakładki";
+    const active = Math.min(this.state.cat, cats.length - 1);
+    const tab = (on) =>
+      "font-family: Karla, sans-serif; font-size: 13px; letter-spacing: 0.13em; text-transform: uppercase; padding: 13px 24px; border-radius: 999px; cursor: pointer; transition: all .2s ease; border: 1px solid " +
+      (on ? "#1E3A2F" : "rgba(30,58,47,0.25)") +
+      "; background: " + (on ? "#1E3A2F" : "transparent") +
+      "; color: " + (on ? "#FAF4EA" : "#4A443C");
+
+    const categories = cats.map((c, i) => ({
+      ...c,
+      tabStyle: tab(i === active),
+      onSelect: () => this.setState({ cat: i })
+    }));
+
+    const hours = [
+      { days: "Poniedziałek – Czwartek", time: "9:00–20:00", d: [1, 2, 3, 4] },
+      { days: "Piątek – Niedziela", time: "9:00–21:00", d: [5, 6, 0] }
+    ];
+    const day = new Date().getDay();
+    const rows = hours.map((h) => ({
+      days: h.days,
+      time: h.time,
+      rowStyle:
+        "display: flex; justify-content: space-between; gap: 16px; align-items: baseline; padding: 16px 0; border-bottom: 1px solid rgba(199,169,107,0.2); color: " +
+        (h.d.includes(day) ? "#FFFDF8" : "rgba(243,232,218,0.7)")
+    }));
+    const open = hours.find((h) => h.d.includes(day));
+
+    return {
+      categories,
+      visibleCategories: tabsMode ? [categories[active]] : categories,
+      tabsMode,
+      hours: rows,
+      todayLine: open ? "Dziś czynne " + open.time + " — do zobaczenia." : "Dziś czynne 9:00–20:00.",
+      showPrices: this.props.showPrices ?? true,
+      reservationUrl: this.props.facebookUrl ?? "https://www.facebook.com/",
+      facebookUrl: this.props.facebookUrl ?? "https://www.facebook.com/",
+      instagramUrl: this.props.instagramUrl ?? "https://www.instagram.com/",
+      mapUrl: this.props.mapUrl ?? "https://maps.google.com/?q=Plac+Piastowski+21C+Cieplice+Jelenia+G%C3%B3ra"
+    };
+  }
+}
+</script>
+</body>
+</html>
