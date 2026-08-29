@@ -36,13 +36,63 @@
   a { color: var(--ink); text-decoration: none; }
   ::selection { background: #E4CDBD; }
   @keyframes bmFade { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+
+  /* ---- scroll-reveal: safe-by-default (visible unless JS arms it) ---- */
+  .bm-reveal { transition: opacity .85s cubic-bezier(.16,.84,.44,1), transform .85s cubic-bezier(.16,.84,.44,1); }
+  .bm-reveal.bm-armed { opacity: 0; transform: translateY(30px); }
+  .bm-reveal.bm-armed.is-in { opacity: 1; transform: none; }
+
+  /* ---- top scroll-progress hairline ---- */
+  #bm-progress-track { position: fixed; top: 0; left: 0; right: 0; height: 2px; z-index: 60; background: transparent; pointer-events: none; }
+  #bm-progress-bar { height: 100%; width: 0%; background: var(--brass); transition: width .1s linear; }
+
+  /* ---- intro curtain (pure CSS, no JS dependency) ---- */
+  #bm-curtain { position: fixed; inset: 0; z-index: 999; background: var(--ink); display: flex; align-items: center; justify-content: center; pointer-events: none; animation: bmCurtainOut .9s cubic-bezier(.76,0,.24,1) .35s forwards; }
+  #bm-curtain span { font-family: Fraunces, Georgia, serif; font-style: italic; font-size: 22px; color: var(--paper); opacity: .9; animation: bmCurtainText .5s ease .1s both; }
+  @keyframes bmCurtainText { from { opacity: 0; letter-spacing: .3em; } to { opacity: .9; letter-spacing: .04em; } }
+  @keyframes bmCurtainOut { to { opacity: 0; visibility: hidden; } }
+  @media (prefers-reduced-motion: reduce) { #bm-curtain { display: none; } }
+
+  /* ---- grain / texture overlay ---- */
+  #bm-grain { position: fixed; inset: 0; z-index: 50; pointer-events: none; opacity: .035; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+
+  /* ---- custom cursor (desktop-with-mouse only, armed by JS) ---- */
+  #bm-cursor-dot, #bm-cursor-ring { position: fixed; top: 0; left: 0; z-index: 70; pointer-events: none; border-radius: 50%; opacity: 0; transition: opacity .2s ease; }
+  #bm-cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--brass); }
+  #bm-cursor-ring { width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1px solid var(--ink); transition: opacity .2s ease, transform .25s ease, width .25s ease, height .25s ease, margin .25s ease; }
+  #bm-cursor-ring.is-active { width: 52px; height: 52px; margin: -26px 0 0 -26px; border-color: var(--brass); }
+  body.bm-has-cursor #bm-cursor-dot, body.bm-has-cursor #bm-cursor-ring { opacity: 1; }
+  body.bm-has-cursor, body.bm-has-cursor a, body.bm-has-cursor button { cursor: none; }
+
+  /* ---- marquee ticker ---- */
+  .bm-marquee { overflow: hidden; background: var(--ink); border-top: 1px solid var(--line-on-ink); border-bottom: 1px solid var(--line-on-ink); padding: 16px 0; white-space: nowrap; }
+  .bm-marquee__track { display: inline-flex; animation: bmMarquee 32s linear infinite; }
+  .bm-marquee:hover .bm-marquee__track { animation-play-state: paused; }
+  .bm-marquee__item { font-family: Fraunces, Georgia, serif; font-style: italic; font-size: 18px; color: rgba(247,243,234,0.82); padding: 0 28px; white-space: nowrap; }
+  .bm-marquee__dot { color: var(--brass); padding: 0 6px; }
+  @keyframes bmMarquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .bm-marquee__track { animation: none; } }
+
+  /* ---- flourish divider ---- */
+  .bm-flourish { display: flex; align-items: center; justify-content: center; gap: 14px; padding: 0 0 clamp(30px, 5vw, 48px) }
+  .bm-flourish svg { color: var(--brass); }
+
   .bm-menu-tabs::-webkit-scrollbar { display: none; }
-  .bm-tab { position: relative; font-family: Inter, Helvetica, sans-serif; font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 0 14px; background: none; border: none; cursor: pointer; flex-shrink: 0; scroll-snap-align: start; white-space: nowrap; }
+  .bm-tab { position: relative; font-family: Inter, Helvetica, sans-serif; font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 0 0 14px; background: none; border: none; cursor: pointer; flex-shrink: 0; scroll-snap-align: start; white-space: nowrap; transition: color .2s ease; }
   .bm-tab::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform .25s ease; }
   .bm-tab.is-on::after { transform: scaleX(1); }
   .bm-tab.is-on { color: var(--ink); }
   .bm-tab:not(.is-on) { color: var(--ink-soft); }
-  .bm-btn { display: inline-flex; align-items: center; gap: 10px; font-family: Inter, Helvetica, sans-serif; font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 26px; border-radius: 2px; transition: background .2s ease, color .2s ease, border-color .2s ease; }
+  .bm-tab:not(.is-on):hover { color: var(--ink); }
+  #bm-menu-viewport { transition: opacity .28s ease; }
+
+  .bm-btn { position: relative; display: inline-flex; align-items: center; gap: 10px; font-family: Inter, Helvetica, sans-serif; font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase; padding: 15px 26px; border-radius: 2px; overflow: hidden; transition: background .25s ease, color .25s ease, border-color .25s ease, transform .35s cubic-bezier(.16,.84,.44,1); }
+  .bm-btn::before { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity .3s ease; background: radial-gradient(120px circle at var(--mx, 50%) var(--my, 50%), rgba(156,122,60,0.35), transparent 65%); pointer-events: none; }
+  .bm-btn:hover::before { opacity: 1; }
   .bm-btn-solid { background: var(--ink); color: var(--paper); border: 1px solid var(--ink); }
   .bm-btn-solid:hover { background: transparent; color: var(--ink); }
   .bm-btn-line { background: transparent; color: var(--ink); border: 1px solid var(--line); }
@@ -52,14 +102,32 @@
   .bm-navlink { position: relative; padding-bottom: 3px; }
   .bm-navlink::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--ink); transform: scaleX(0); transform-origin: left; transition: transform .2s ease; }
   .bm-navlink:hover::after { transform: scaleX(1); }
-  .bm-social { color: var(--ink-soft); }
+  .bm-social { color: var(--ink-soft); transition: color .2s ease; }
   .bm-social:hover { color: var(--ink); }
+
+  #bm-header { transition: box-shadow .3s ease, background .3s ease; }
+  #bm-header nav { transition: padding .3s ease; }
+
+  #bm-hero-visual { transition: transform .1s linear; }
+
+  .bm-gal-item { overflow: hidden; }
+  .bm-gal-item image-slot { transition: transform .6s cubic-bezier(.16,.84,.44,1); display: block; }
+  .bm-gal-item:hover image-slot { transform: scale(1.06); }
+
+  .bm-menu-card { transition: transform .5s cubic-bezier(.16,.84,.44,1); }
+  .bm-menu-card:hover { transform: translateY(-3px); }
 </style>
 </helmet>
 <template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#1B2A22"></rect><text x="50" y="60" text-anchor="middle" font-family="Georgia, serif" font-size="34" fill="#F7F3EA">BM</text></svg></template>
-<div style="font-family: Inter, Helvetica, sans-serif; color: var(--ink); background: var(--paper); overflow-x: hidden">
+<div id="bm-root" style="font-family: Inter, Helvetica, sans-serif; color: var(--ink); background: var(--paper); overflow-x: hidden">
 
-  <header style="position: sticky; top: 0; z-index: 40; background: rgba(247,243,234,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line)">
+  <div id="bm-curtain"><span>Bonjour Mery</span></div>
+  <div id="bm-progress-track"><div id="bm-progress-bar"></div></div>
+  <div id="bm-grain"></div>
+  <div id="bm-cursor-ring"></div>
+  <div id="bm-cursor-dot"></div>
+
+  <header id="bm-header" style="position: sticky; top: 0; z-index: 40; background: rgba(247,243,234,0.92); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line)">
     <nav style="max-width: 1220px; margin: 0 auto; padding: 18px 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 28px">
       <a href="#top" style="display: flex; align-items: baseline; gap: 8px; margin-right: auto">
         <span style="font-family: Fraunces, Georgia, serif; font-optical-sizing: auto; font-weight: 480; font-size: 24px; letter-spacing: 0.01em; color: var(--ink); line-height: 1">Bonjour Mery</span>
@@ -103,7 +171,7 @@
           </div>
         </div>
       </div>
-      <div style="position: relative">
+      <div id="bm-hero-visual" style="position: relative">
         <div style="aspect-ratio: 4 / 5; min-width: 0; overflow: hidden; border: 1px solid var(--line); padding: 14px; background: var(--paper)">
           <div style="width: 100%; height: 100%; overflow: hidden">
             <image-slot id="bm-hero" shape="rect" fit="cover" src="{{ images.hero }}" placeholder="zdjęcie wnętrza / stołu śniadaniowego, pionowe, min. 1600px"></image-slot>
@@ -116,9 +184,24 @@
     </div>
   </section>
 
+  <div class="bm-marquee">
+    <div class="bm-marquee__track">
+      <span class="bm-marquee__item">Poranne spotkania<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Cr&ecirc;pes na cienko<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Kawa speciality<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Cieplice &#346;l&#261;skie Zdr&oacute;j<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Croissanty codziennie<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Poranne spotkania<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Cr&ecirc;pes na cienko<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Kawa speciality<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Cieplice &#346;l&#261;skie Zdr&oacute;j<span class="bm-marquee__dot">&bull;</span></span>
+      <span class="bm-marquee__item">Croissanty codziennie<span class="bm-marquee__dot">&bull;</span></span>
+    </div>
+  </div>
+
   <section id="o-nas" data-screen-label="O nas" style="padding: clamp(64px, 9vw, 116px) 24px; background: var(--paper-alt)">
     <div style="max-width: 1220px; margin: 0 auto; display: grid; gap: clamp(40px, 6vw, 88px); grid-template-columns: repeat(auto-fit, minmax(min(380px, 100%), 1fr)); align-items: center">
-      <div style="position: relative">
+      <div class="bm-reveal" style="position: relative">
         <div style="aspect-ratio: 3 / 4; min-width: 0; overflow: hidden; border: 1px solid var(--line); max-width: 380px">
           <image-slot id="bm-portret" shape="rect" fit="cover" src="{{ images.portrait }}" placeholder="portret Marysieńki z cappuccino (obraz z wnętrza lokalu)"></image-slot>
         </div>
@@ -126,7 +209,7 @@
           <image-slot id="bm-about-1" shape="rect" fit="cover" src="{{ images.croissant }}" placeholder="detal stolika / croissant"></image-slot>
         </div>
       </div>
-      <div>
+      <div class="bm-reveal" style="transition-delay: .12s">
         <p style="font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin: 0 0 20px">O nas</p>
         <p style="font-family: Fraunces, Georgia, serif; font-style: italic; font-optical-sizing: auto; font-weight: 400; font-size: clamp(26px, 3.2vw, 36px); line-height: 1.32; color: var(--ink); margin: 0 0 30px; text-wrap: pretty">&bdquo;Jej portret, z fili&#380;ank&#261; cappuccino w d&#322;oni, wita go&#347;ci przy wej&#347;ciu &#8212; jakby wci&#261;&#380; zaprasza&#322;a na kaw&#281;.&rdquo;</p>
         <p style="font-size: 16.5px; line-height: 1.85; color: var(--ink-soft); margin: 0 0 18px; text-wrap: pretty">Nasze imię pochodzi od Marysieńki Sobieskiej — królowej, która przywiozła do Polski francuski gust i poranną kawę na dwór. Reszta jest już całkiem współczesna.</p>
@@ -137,11 +220,11 @@
             <p style="font-size: 11.5px; letter-spacing: 0.08em; color: var(--ink-soft); margin: 4px 0 0">Otwieramy</p>
           </div>
           <div>
-            <p style="font-family: Fraunces, Georgia, serif; font-size: 30px; color: var(--ink); margin: 0">65+</p>
+            <p id="bm-stat-65" style="font-family: Fraunces, Georgia, serif; font-size: 30px; color: var(--ink); margin: 0">65+</p>
             <p style="font-size: 11.5px; letter-spacing: 0.08em; color: var(--ink-soft); margin: 4px 0 0">Pozycji w karcie</p>
           </div>
           <div>
-            <p style="font-family: Fraunces, Georgia, serif; font-size: 30px; color: var(--ink); margin: 0">100%</p>
+            <p id="bm-stat-100" style="font-family: Fraunces, Georgia, serif; font-size: 30px; color: var(--ink); margin: 0">100%</p>
             <p style="font-size: 11.5px; letter-spacing: 0.08em; color: var(--ink-soft); margin: 4px 0 0">Świeże każdego dnia</p>
           </div>
         </div>
@@ -151,7 +234,7 @@
 
   <section id="menu" data-screen-label="Menu" style="padding: clamp(64px, 10vw, 128px) 24px; background: var(--paper)">
     <div style="max-width: 1220px; margin: 0 auto">
-      <div style="text-align: center; max-width: 620px; margin: 0 auto clamp(38px, 5vw, 60px)">
+      <div class="bm-reveal" style="text-align: center; max-width: 620px; margin: 0 auto clamp(38px, 5vw, 60px)">
         <p style="font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin: 0 0 18px">Carte du jour</p>
         <h2 style="font-family: Fraunces, Georgia, serif; font-optical-sizing: auto; font-weight: 480; font-size: clamp(34px, 5vw, 52px); line-height: 1.08; margin: 0 0 16px; color: var(--ink)">Menu</h2>
         <p style="font-size: 16px; line-height: 1.7; color: var(--ink-soft); margin: 0">Poranne spotkania serwujemy 9:00–13:00, popołudniami — crêpes, desery i kawa aż do zamknięcia. Karta zmienia się z sezonem, dopytaj o propozycję dnia.</p>
@@ -165,9 +248,9 @@
         </div>
       </sc-if>
 
-      <div style="display: grid; gap: clamp(40px, 6vw, 72px)">
+      <div id="bm-menu-viewport" style="display: grid; gap: clamp(40px, 6vw, 72px)">
         <sc-for list="{{ visibleCategories }}" as="cat" hint-placeholder-count="1">
-          <div style="position: relative; overflow: hidden; border: 1px solid var(--line)">
+          <div class="bm-menu-card" style="position: relative; overflow: hidden; border: 1px solid var(--line)">
             <div style="position: absolute; inset: 0; z-index: 0">
               <image-slot id="{{ cat.slotId }}" shape="rect" fit="cover" src="{{ cat.slotSrc }}" placeholder="{{ cat.slotHint }}"></image-slot>
             </div>
@@ -201,13 +284,13 @@
 
   <section id="godziny" data-screen-label="Godziny" style="padding: clamp(64px, 10vw, 120px) 24px; background: var(--ink); color: var(--paper)">
     <div style="max-width: 1220px; margin: 0 auto; display: grid; gap: clamp(34px, 6vw, 72px); grid-template-columns: repeat(auto-fit, minmax(min(290px, 100%), 1fr)); align-items: center">
-      <div>
+      <div class="bm-reveal">
         <p style="font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin: 0 0 18px">Godziny otwarcia</p>
         <h2 style="font-family: Fraunces, Georgia, serif; font-optical-sizing: auto; font-weight: 480; font-size: clamp(34px, 5vw, 52px); line-height: 1.08; margin: 0 0 22px">Otwarte codziennie<br />od dziewiątej</h2>
         <p style="font-size: 16px; line-height: 1.8; color: rgba(247,243,234,0.72); margin: 0 0 26px; max-width: 420px">Śniadania serwujemy od 9:00 do 13:00. Później zostaje cała karta crêpes, deserów i kawy — do wieczora.</p>
         <p style="font-family: Fraunces, Georgia, serif; font-style: italic; font-size: 20px; color: var(--paper); margin: 0">{{ todayLine }}</p>
       </div>
-      <div style="border: 1px solid var(--line-on-ink); padding: clamp(24px, 3vw, 40px)">
+      <div class="bm-reveal" style="transition-delay: .12s; border: 1px solid var(--line-on-ink); padding: clamp(24px, 3vw, 40px)">
         <sc-for list="{{ hours }}" as="row" hint-placeholder-count="3">
           <div style="{{ row.rowStyle }}">
             <span style="font-size: 14.5px; letter-spacing: 0.04em">{{ row.days }}</span>
@@ -224,7 +307,7 @@
 
   <section id="galeria" data-screen-label="Galeria" style="padding: clamp(64px, 10vw, 128px) 24px; background: var(--paper-alt)">
     <div style="max-width: 1220px; margin: 0 auto">
-      <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: clamp(28px, 4vw, 46px)">
+      <div class="bm-reveal" style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: clamp(28px, 4vw, 46px)">
         <div>
           <p style="font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin: 0 0 16px">Galeria</p>
           <h2 style="font-family: Fraunces, Georgia, serif; font-optical-sizing: auto; font-weight: 480; font-size: clamp(34px, 5vw, 52px); line-height: 1.08; margin: 0; color: var(--ink)">Poranki u Mery</h2>
@@ -232,19 +315,23 @@
         <a href="{{ facebookUrl }}" target="_blank" rel="noopener" class="bm-navlink" style="font-size: 12.5px; letter-spacing: 0.1em; text-transform: uppercase">Więcej na Facebooku</a>
       </div>
       <div style="display: grid; gap: 14px; grid-template-columns: repeat(6, minmax(0, 1fr)); grid-auto-rows: minmax(120px, 1fr)">
-        <div style="grid-column: span 3; grid-row: span 2; min-width: 0; overflow: hidden; border: 1px solid var(--line)"><image-slot id="bm-gal-1" shape="rect" fit="cover" src="{{ images.crepeSuzette }}" placeholder="wnętrze, poziome"></image-slot></div>
-        <div style="grid-column: span 3; min-width: 0; overflow: hidden; border: 1px solid var(--line)"><image-slot id="bm-gal-2" shape="rect" fit="cover" src="{{ images.croqueMadame }}" placeholder="croque madame"></image-slot></div>
-        <div style="grid-column: span 3; min-width: 0; overflow: hidden; border: 1px solid var(--line)"><image-slot id="bm-gal-3" shape="rect" fit="cover" src="{{ images.latteArt }}" placeholder="latte art / barista"></image-slot></div>
-        <div style="grid-column: span 2; grid-row: span 2; min-width: 0; overflow: hidden; border: 1px solid var(--line)"><image-slot id="bm-gal-4" shape="rect" fit="cover" src="{{ images.pancakesStack }}" placeholder="stos pancakes"></image-slot></div>
-        <div style="grid-column: span 2; grid-row: span 2; min-width: 0; overflow: hidden; border: 1px solid var(--line)"><image-slot id="bm-gal-5" shape="rect" fit="cover" src="{{ images.dessertCase }}" placeholder="deser, blat marmurowy"></image-slot></div>
-        <div style="grid-column: span 2; grid-row: span 2; min-width: 0; overflow: hidden; border: 1px solid var(--line)"><image-slot id="bm-gal-6" shape="rect" fit="cover" src="{{ images.interior }}" placeholder="wnętrze, mosiężne detale"></image-slot></div>
+        <div class="bm-reveal bm-gal-item" style="grid-column: span 3; grid-row: span 2; min-width: 0; border: 1px solid var(--line)"><image-slot id="bm-gal-1" shape="rect" fit="cover" src="{{ images.crepeSuzette }}" placeholder="wnętrze, poziome"></image-slot></div>
+        <div class="bm-reveal bm-gal-item" style="transition-delay: .06s; grid-column: span 3; min-width: 0; border: 1px solid var(--line)"><image-slot id="bm-gal-2" shape="rect" fit="cover" src="{{ images.croqueMadame }}" placeholder="croque madame"></image-slot></div>
+        <div class="bm-reveal bm-gal-item" style="transition-delay: .12s; grid-column: span 3; min-width: 0; border: 1px solid var(--line)"><image-slot id="bm-gal-3" shape="rect" fit="cover" src="{{ images.latteArt }}" placeholder="latte art / barista"></image-slot></div>
+        <div class="bm-reveal bm-gal-item" style="transition-delay: .06s; grid-column: span 2; grid-row: span 2; min-width: 0; border: 1px solid var(--line)"><image-slot id="bm-gal-4" shape="rect" fit="cover" src="{{ images.pancakesStack }}" placeholder="stos pancakes"></image-slot></div>
+        <div class="bm-reveal bm-gal-item" style="transition-delay: .12s; grid-column: span 2; grid-row: span 2; min-width: 0; border: 1px solid var(--line)"><image-slot id="bm-gal-5" shape="rect" fit="cover" src="{{ images.dessertCase }}" placeholder="deser, blat marmurowy"></image-slot></div>
+        <div class="bm-reveal bm-gal-item" style="transition-delay: .18s; grid-column: span 2; grid-row: span 2; min-width: 0; border: 1px solid var(--line)"><image-slot id="bm-gal-6" shape="rect" fit="cover" src="{{ images.interior }}" placeholder="wnętrze, mosiężne detale"></image-slot></div>
       </div>
     </div>
   </section>
 
-  <section id="kontakt" data-screen-label="Kontakt" style="padding: clamp(64px, 10vw, 128px) 24px; background: var(--paper)">
+  <div class="bm-flourish">
+    <svg width="120" height="14" viewBox="0 0 120 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M0 7H46" stroke="currentColor" stroke-width="1"/><path d="M74 7H120" stroke="currentColor" stroke-width="1"/><path d="M60 1L66 7L60 13L54 7L60 1Z" stroke="currentColor" stroke-width="1"/></svg>
+  </div>
+
+  <section id="kontakt" data-screen-label="Kontakt" style="padding: 0 24px clamp(64px, 10vw, 128px); background: var(--paper)">
     <div style="max-width: 1220px; margin: 0 auto; display: grid; gap: clamp(30px, 5vw, 60px); grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); align-items: start">
-      <div>
+      <div class="bm-reveal">
         <p style="font-size: 11.5px; letter-spacing: 0.24em; text-transform: uppercase; color: var(--brass); margin: 0 0 18px">Lokalizacja i kontakt</p>
         <h2 style="font-family: Fraunces, Georgia, serif; font-optical-sizing: auto; font-weight: 480; font-size: clamp(34px, 5vw, 52px); line-height: 1.08; margin: 0 0 28px; color: var(--ink)">Plac Piastowski 21C<br />Cieplice, Jelenia Góra</h2>
         <div style="display: grid; gap: 18px; max-width: 420px">
@@ -270,7 +357,7 @@
           <a href="{{ facebookUrl }}" target="_blank" rel="noopener" class="bm-btn bm-btn-line">Facebook</a>
         </div>
       </div>
-      <div>
+      <div class="bm-reveal" style="transition-delay: .12s">
         <div style="position: relative; aspect-ratio: 4 / 3; min-width: 0; overflow: hidden; border: 1px solid var(--line); padding: 10px; background: var(--paper-alt)">
           <iframe title="Mapa — Plac Piastowski 21C, Cieplice" src="https://www.google.com/maps?q=Plac%20Piastowski%2021C%2C%2058-560%20Jelenia%20G%C3%B3ra&amp;z=16&amp;output=embed" loading="lazy" referrerPolicy="no-referrer-when-downgrade" style="width: 100%; height: 100%; border: 0; display: block; filter: saturate(0.82) contrast(0.96)"></iframe>
         </div>
@@ -462,6 +549,172 @@ class Component extends DCLogic {
       instagramUrl: this.props.instagramUrl ?? "https://www.instagram.com/",
       mapUrl: this.props.mapUrl ?? "https://maps.google.com/?q=Plac+Piastowski+21C+Cieplice+Jelenia+G%C3%B3ra"
     };
+  }
+
+  componentDidMount() {
+    const root = document.getElementById("bm-root");
+    if (!root) return;
+    let reduceMotion = false;
+    try { reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
+
+    // Scroll reveal -- elements start fully visible; we only hide them if we
+    // can also guarantee a mechanism that will reveal them again.
+    try {
+      if (!reduceMotion && "IntersectionObserver" in window) {
+        const revealEls = root.querySelectorAll(".bm-reveal");
+        revealEls.forEach((el) => el.classList.add("bm-armed"));
+        const io = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-in");
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.16, rootMargin: "0px 0px -60px 0px" });
+        revealEls.forEach((el) => io.observe(el));
+      }
+    } catch (e) { console.error("[bonjour-mery] reveal setup failed", e); }
+
+    // Animated stat counters (run once, first time they scroll into view)
+    try {
+      if (!reduceMotion && "IntersectionObserver" in window) {
+        const counters = [
+          { id: "bm-stat-65", to: 65, suffix: "+" },
+          { id: "bm-stat-100", to: 100, suffix: "%" }
+        ];
+        const animateCount = (el, to, suffix) => {
+          const start = performance.now();
+          const duration = 1100;
+          const step = (now) => {
+            const p = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = Math.round(to * eased) + suffix;
+            if (p < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        };
+        counters.forEach((c) => {
+          const el = document.getElementById(c.id);
+          if (!el) return;
+          const obs = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                animateCount(el, c.to, c.suffix);
+                obs.unobserve(entry.target);
+              }
+            });
+          }, { threshold: 0.6 });
+          obs.observe(el);
+        });
+      }
+    } catch (e) { console.error("[bonjour-mery] counters setup failed", e); }
+
+    // Header shrink + scroll progress
+    try {
+      const header = document.getElementById("bm-header");
+      const nav = header ? header.querySelector("nav") : null;
+      const progress = document.getElementById("bm-progress-bar");
+      let ticking = false;
+      const onScroll = () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          const y = window.scrollY || 0;
+          const doc = document.documentElement;
+          const max = doc.scrollHeight - doc.clientHeight;
+          if (progress) progress.style.width = (max > 0 ? Math.min(1, y / max) * 100 : 0) + "%";
+          if (header) header.style.boxShadow = y > 24 ? "0 8px 24px rgba(27,42,34,0.08)" : "none";
+          if (nav) nav.style.padding = y > 24 ? "12px 24px" : "18px 24px";
+          ticking = false;
+        });
+      };
+      window.addEventListener("scroll", onScroll, { passive: true });
+      onScroll();
+    } catch (e) { console.error("[bonjour-mery] header/progress setup failed", e); }
+
+    // Whole-hero-visual drift on scroll (moves slower than the page --
+    // safe from gap artifacts since it shifts the whole framed block,
+    // border and all, over the page background, not the cropped photo
+    // inside its own fixed box).
+    try {
+      if (!reduceMotion) {
+        const hero = document.getElementById("bm-hero-visual");
+        if (hero) {
+          let hTicking = false;
+          const onHeroScroll = () => {
+            if (hTicking) return;
+            hTicking = true;
+            requestAnimationFrame(() => {
+              const y = window.scrollY || 0;
+              hero.style.transform = "translateY(" + Math.min(36, y * 0.06) + "px)";
+              hTicking = false;
+            });
+          };
+          window.addEventListener("scroll", onHeroScroll, { passive: true });
+          onHeroScroll();
+        }
+      }
+    } catch (e) { console.error("[bonjour-mery] hero drift setup failed", e); }
+
+    // Menu category cross-fade on tab switch
+    try {
+      this._menuViewport = document.getElementById("bm-menu-viewport");
+      this._lastCat = this.state.cat;
+    } catch (e) {}
+
+    // Magnetic buttons + cursor-follow glow
+    try {
+      let hoverCapable = false;
+      try { hoverCapable = window.matchMedia("(hover: hover)").matches; } catch (e) {}
+      if (!reduceMotion && hoverCapable) {
+        root.querySelectorAll(".bm-btn").forEach((btn) => {
+          btn.addEventListener("mousemove", (e) => {
+            const r = btn.getBoundingClientRect();
+            const mx = e.clientX - r.left, my = e.clientY - r.top;
+            btn.style.setProperty("--mx", mx + "px");
+            btn.style.setProperty("--my", my + "px");
+            btn.style.transform = "translate(" + (mx - r.width / 2) * 0.14 + "px," + (my - r.height / 2) * 0.26 + "px)";
+          });
+          btn.addEventListener("mouseleave", () => { btn.style.transform = ""; });
+        });
+
+        const dot = document.getElementById("bm-cursor-dot");
+        const ring = document.getElementById("bm-cursor-ring");
+        if (dot && ring) {
+          let rx = 0, ry = 0, tx = 0, ty = 0, started = false;
+          window.addEventListener("mousemove", (e) => {
+            tx = e.clientX; ty = e.clientY;
+            if (!started) {
+              rx = tx; ry = ty; started = true;
+              document.body.classList.add("bm-has-cursor");
+            }
+            dot.style.transform = "translate3d(" + tx + "px," + ty + "px,0)";
+          }, { passive: true });
+          const loop = () => {
+            rx += (tx - rx) * 0.18;
+            ry += (ty - ry) * 0.18;
+            ring.style.transform = "translate3d(" + rx + "px," + ry + "px,0)";
+            requestAnimationFrame(loop);
+          };
+          requestAnimationFrame(loop);
+          root.querySelectorAll("a, button").forEach((el) => {
+            el.addEventListener("mouseenter", () => ring.classList.add("is-active"));
+            el.addEventListener("mouseleave", () => ring.classList.remove("is-active"));
+          });
+        }
+      }
+    } catch (e) { console.error("[bonjour-mery] magnetic/cursor setup failed", e); }
+  }
+
+  componentDidUpdate() {
+    try {
+      if (this._menuViewport && this._lastCat !== this.state.cat) {
+        this._lastCat = this.state.cat;
+        const el = this._menuViewport;
+        el.style.opacity = "0.001";
+        setTimeout(() => { el.style.opacity = "1"; }, 40);
+      }
+    } catch (e) { console.error("[bonjour-mery] menu crossfade failed", e); }
   }
 }
 </script>
