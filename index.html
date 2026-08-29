@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<title>Bonjour Mery — Cieplice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Bonjour Mery — kawiarnia śniadaniowa w Cieplicach Śląskich Zdroju. Croissanty, crêpes i kawa speciality od 9:00.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%2310180F'/%3E%3Ccircle cx='32' cy='32' r='24' fill='none' stroke='%23B08D4F' stroke-width='2'/%3E%3Cpath d='M32 14c-5 6-5 11 0 15 5-4 5-9 0-15z' fill='none' stroke='%23B08D4F' stroke-width='2'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,300;1,9..144,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   BONJOUR MERY — scroll-driven 3D experience
+   Six acts. Each act is a tall scroll track containing a sticky
+   stage; scroll position inside the track drives --p (0 → 1),
+   which every transform in that act reads from.
+   ============================================================ */
+
+:root{
+  --ink:#10180F;
+  --ink-2:#18231A;
+  --paper:#F4EFE4;
+  --paper-2:#E8DFCC;
+  --brass:#B08D4F;
+  --brass-lt:#D8BE86;
+  --muted:rgba(244,239,228,.58);
+  --muted-d:rgba(16,24,15,.55);
+  --serif:Fraunces,Georgia,'Times New Roman',serif;
+  --sans:Inter,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:auto}
+body{
+  margin:0;background:var(--ink);color:var(--paper);
+  font-family:var(--sans);font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+img{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--brass);color:var(--ink)}
+
+/* ---------- ambient texture ---------- */
+#grain{
+  position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+#vignette{
+  position:fixed;inset:0;z-index:89;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(6,10,6,.34) 100%);
+}
+
+/* ---------- overture / preloader ---------- */
+#overture{
+  position:fixed;inset:0;z-index:200;background:var(--ink);
+  display:flex;align-items:center;justify-content:center;flex-direction:column;gap:26px;
+  transition:opacity 1.1s var(--ease),visibility 1.1s var(--ease);
+}
+#overture.done{opacity:0;visibility:hidden}
+#overture .crest{width:132px;height:132px;color:var(--brass)}
+#overture .crest path,#overture .crest circle,#overture .crest line{
+  stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);
+  animation:draw 1.9s var(--ease) forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+#overture .mark{
+  font-family:var(--serif);font-size:13px;letter-spacing:.5em;text-transform:uppercase;
+  color:var(--muted);opacity:0;animation:fadeUp .9s var(--ease) 1s forwards;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:.7;transform:none}}
+
+/* ---------- chrome ---------- */
+#rail{position:fixed;top:0;left:0;right:0;height:1px;z-index:95;background:rgba(244,239,228,.1)}
+#rail i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--brass),var(--brass-lt))}
+
+#nav{
+  position:fixed;top:0;left:0;right:0;z-index:80;
+  display:flex;align-items:center;gap:20px;
+  padding:22px clamp(18px,4vw,46px);
+  transition:transform .5s var(--ease),background .5s var(--ease),padding .5s var(--ease);
+  mix-blend-mode:difference;
+}
+#nav.tucked{transform:translateY(-110%)}
+#nav .logo{font-family:var(--serif);font-size:19px;letter-spacing:.02em;margin-right:auto;color:#fff}
+#nav .links{display:flex;gap:clamp(14px,2.4vw,30px);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#fff}
+#nav .links a{opacity:.65;transition:opacity .3s}
+#nav .links a:hover{opacity:1}
+@media(max-width:760px){#nav .links{display:none}}
+
+.cue{
+  position:absolute;left:50%;bottom:56px;transform:translateX(-50%);
+  font-size:10px;letter-spacing:.34em;text-transform:uppercase;color:var(--muted);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.cue span{display:block;width:1px;height:40px;background:linear-gradient(var(--brass),transparent);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:.25;transform:scaleY(.55)}50%{opacity:1;transform:scaleY(1)}}
+
+/* ---------- act scaffolding ---------- */
+.act{position:relative}
+.stage{
+  position:sticky;top:0;height:100vh;overflow:hidden;
+  perspective:1100px;perspective-origin:50% 48%;
+  display:flex;align-items:center;justify-content:center;
+}
+.world{position:absolute;inset:0;transform-style:preserve-3d}
+
+/* ============================ ACT I — OVERTURE ============================ */
+#act-hero{height:340vh}
+#act-hero .stage{background:radial-gradient(ellipse at 50% 30%,#22301F 0%,#0D140C 62%)}
+.hero-far{
+  position:absolute;inset:-8%;background:url('assets/salle.jpg') center/cover no-repeat;
+  filter:blur(7px) brightness(.46) saturate(.8);
+}
+.hero-glow{
+  position:absolute;left:50%;top:38%;width:min(120vw,1300px);aspect-ratio:1;
+  transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,rgba(216,190,134,.2) 0%,transparent 62%);
+}
+.hero-crest{position:absolute;left:50%;top:50%;width:min(66vw,470px);color:rgba(216,190,134,.2)}
+.hero-title{
+  position:relative;text-align:center;transform-style:preserve-3d;
+  font-family:var(--serif);font-weight:300;
+  font-size:clamp(46px,11.5vw,168px);line-height:.9;letter-spacing:-.02em;
+  text-shadow:0 18px 60px rgba(4,8,4,.75);
+}
+.hero-title .ln{display:block;transform-style:preserve-3d}
+.hero-title .ch{display:inline-block;transform-style:preserve-3d;will-change:transform,opacity}
+.hero-sub{
+  position:absolute;left:50%;bottom:20%;transform:translateX(-50%);text-align:center;width:min(90vw,560px);
+}
+.hero-sub .eyebrow{font-size:10.5px;letter-spacing:.44em;text-transform:uppercase;color:var(--brass-lt);margin:0 0 14px}
+.hero-sub p{font-size:15px;line-height:1.8;color:var(--muted);margin:0}
+
+/* ============================ ACT II — LE PASSAGE ============================ */
+#act-tunnel{height:520vh}
+#act-tunnel .stage{background:linear-gradient(#0D140C,#151F13 55%,#0D140C)}
+.tunnel-cam{position:absolute;inset:0;transform-style:preserve-3d}
+.plane{
+  position:absolute;left:50%;top:50%;width:clamp(250px,34vw,520px);
+  transform-style:preserve-3d;will-change:transform,opacity;
+}
+.plane .frame{
+  position:relative;padding:10px;background:var(--paper);
+  box-shadow:0 40px 90px rgba(0,0,0,.6);
+}
+.plane img{width:100%;aspect-ratio:4/5;object-fit:cover}
+.plane .cap{
+  position:absolute;left:10px;bottom:-46px;font-family:var(--serif);font-style:italic;
+  font-size:16px;color:var(--brass-lt);white-space:nowrap;
+}
+.tunnel-legend{
+  position:absolute;left:50%;bottom:9%;transform:translateX(-50%);text-align:center;width:min(92vw,640px);
+  pointer-events:none;
+}
+.tunnel-legend h2{
+  font-family:var(--serif);font-weight:300;font-size:clamp(24px,4vw,46px);
+  margin:0 0 10px;line-height:1.1;
+}
+.tunnel-legend p{font-size:13.5px;line-height:1.75;color:var(--muted);margin:0}
+
+/* ============================ ACT III — L'HISTOIRE ============================ */
+#act-story{height:360vh}
+#act-story .stage{background:var(--paper);color:var(--ink)}
+.story-grid{
+  position:relative;z-index:2;width:min(92vw,1180px);
+  display:grid;gap:clamp(26px,5vw,72px);
+  grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));
+  align-items:center;transform-style:preserve-3d;
+}
+.story-art{position:relative;transform-style:preserve-3d;will-change:transform}
+.story-art .a{border:1px solid rgba(16,24,15,.16);padding:12px;background:var(--paper)}
+.story-art .a img{aspect-ratio:3/4;object-fit:cover;width:100%}
+.story-art .b{
+  position:absolute;right:-9%;bottom:-11%;width:47%;
+  border:1px solid rgba(16,24,15,.16);padding:9px;background:var(--paper);
+  box-shadow:0 26px 60px rgba(16,24,15,.2);
+}
+.story-art .b img{aspect-ratio:1;object-fit:cover;width:100%}
+.story-copy .eyebrow{font-size:10.5px;letter-spacing:.4em;text-transform:uppercase;color:var(--brass);margin:0 0 22px}
+.story-line{
+  font-family:var(--serif);font-weight:300;font-style:italic;
+  font-size:clamp(23px,3.1vw,40px);line-height:1.28;margin:0 0 .38em;
+  transform-origin:50% 100%;will-change:transform,opacity;
+}
+.story-body{font-size:15.5px;line-height:1.9;color:var(--muted-d);margin:26px 0 0;max-width:46ch}
+.story-stats{display:flex;flex-wrap:wrap;gap:clamp(20px,4vw,52px);margin-top:34px;padding-top:26px;border-top:1px solid rgba(16,24,15,.14)}
+.story-stats b{display:block;font-family:var(--serif);font-weight:400;font-size:31px}
+.story-stats span{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-d)}
+
+/* ============================ ACT IV — LA CARTE ============================ */
+#act-carte .stage{background:linear-gradient(#0D140C,#161F14)}
+.carte-head{position:absolute;top:13vh;left:50%;transform:translateX(-50%);text-align:center;z-index:5;width:min(92vw,640px)}
+.carte-head .eyebrow{font-size:10.5px;letter-spacing:.44em;text-transform:uppercase;color:var(--brass-lt);margin:0 0 12px}
+.carte-head h2{font-family:var(--serif);font-weight:300;font-size:clamp(28px,5vw,54px);margin:0}
+.deck{position:absolute;left:50%;top:53%;width:0;height:0;transform-style:preserve-3d;z-index:3}
+.card{
+  position:absolute;left:50%;top:50%;
+  width:clamp(258px,25vw,360px);height:clamp(370px,46vh,470px);
+  margin:0;transform-style:preserve-3d;will-change:transform,opacity;
+  background:#0E150D;
+  border:1px solid rgba(216,190,134,.3);
+  transition:border-color .5s var(--ease),box-shadow .5s var(--ease);
+  padding:clamp(20px,2.4vw,30px);
+  display:flex;flex-direction:column;
+  box-shadow:0 44px 90px rgba(0,0,0,.55);
+}
+.card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(160deg,rgba(216,190,134,.09),transparent 46%);
+}
+.card .cimg{position:absolute;inset:0;overflow:hidden}
+.card .cimg img{width:100%;height:100%;object-fit:cover}
+.card .cimg::after{content:'';position:absolute;inset:0;background:linear-gradient(163deg,rgba(11,17,10,.80) 0%,rgba(11,17,10,.90) 48%,rgba(11,17,10,.96) 100%)}
+.card.focus{border-color:rgba(216,190,134,.62);box-shadow:0 54px 110px rgba(0,0,0,.66),0 0 0 1px rgba(216,190,134,.16)}
+.card .cbody{position:relative;z-index:2;display:flex;flex-direction:column;height:100%}
+.card .fr{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--brass-lt);margin:0 0 6px}
+.card h3{font-family:var(--serif);font-weight:400;font-size:clamp(21px,2.2vw,27px);margin:0 0 16px;line-height:1.14}
+.card ul{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.card li{display:flex;align-items:baseline;gap:8px;font-size:12.8px}
+.card li i{flex:1;border-bottom:1px dotted rgba(244,239,228,.26);transform:translateY(-4px)}
+.card li b{font-family:var(--serif);font-weight:400;color:var(--brass-lt);white-space:nowrap}
+.card li em{font-style:normal;color:rgba(244,239,228,.9);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:62%}
+.card .cnt{margin-top:auto;padding-top:14px;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.deck-nav{
+  position:absolute;bottom:9vh;left:50%;transform:translateX(-50%);z-index:6;
+  display:flex;gap:7px;flex-wrap:wrap;justify-content:center;max-width:92vw;
+}
+.deck-nav b{width:5px;height:5px;border-radius:50%;background:rgba(244,239,228,.24);transition:all .4s var(--ease)}
+.deck-nav b.on{background:var(--brass-lt);transform:scale(1.9)}
+
+/* full carte (flat, readable) */
+.carte-full{position:relative;z-index:4;background:var(--paper);color:var(--ink);padding:clamp(56px,9vw,110px) clamp(18px,4vw,46px)}
+.carte-full .inner{width:min(92vw,1080px);margin:0 auto}
+.carte-full h2{font-family:var(--serif);font-weight:300;font-size:clamp(26px,4vw,44px);margin:0 0 8px;text-align:center}
+.carte-full .sub{text-align:center;color:var(--muted-d);font-size:14.5px;line-height:1.8;margin:0 auto 52px;max-width:56ch}
+.cat{margin-bottom:52px;opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
+.cat.in{opacity:1;transform:none}
+.cat > header{display:flex;align-items:baseline;gap:14px;margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid rgba(16,24,15,.18)}
+.cat > header h3{font-family:var(--serif);font-weight:400;font-size:clamp(20px,2.6vw,28px);margin:0}
+.cat > header em{font-family:var(--serif);font-style:italic;font-size:14.5px;color:var(--brass)}
+.cat .note{font-size:13px;line-height:1.75;color:var(--muted-d);margin:0 0 18px;max-width:70ch}
+.cat ul{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.cat li{padding:11px 0;border-bottom:1px solid rgba(16,24,15,.09)}
+.cat .row{display:flex;align-items:baseline;gap:10px}
+.cat .row strong{font-weight:500;font-size:15.5px;white-space:nowrap}
+.cat .row i{flex:1;border-bottom:1px dotted rgba(16,24,15,.28);transform:translateY(-5px);min-width:14px}
+.cat .row b{font-family:var(--serif);font-weight:400;font-size:16px;color:var(--brass);white-space:nowrap}
+.cat .d{font-size:12.8px;line-height:1.6;color:var(--muted-d);margin:5px 0 0}
+
+/* ============================ ACT V — LA GALERIE ============================ */
+#act-gal{height:420vh}
+#act-gal .stage{background:radial-gradient(ellipse at 50% 50%,#1B261A,#0B110A 72%)}
+.drum{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d;will-change:transform}
+.pane{
+  --pw:clamp(200px,23vw,330px);
+  position:absolute;left:50%;top:50%;width:var(--pw);
+  /* centre each pane on the drum axis: img is 3/4, plus 8px frame padding */
+  margin-left:calc(var(--pw) / -2);
+  margin-top:calc(var(--pw) * -0.667 - 8px);
+  transform-style:preserve-3d;backface-visibility:hidden;
+}
+.pane .b{padding:8px;background:var(--paper);box-shadow:0 30px 70px rgba(0,0,0,.55)}
+.pane img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.gal-title{
+  position:absolute;left:50%;top:12vh;transform:translateX(-50%);text-align:center;z-index:5;
+  pointer-events:none;width:min(92vw,600px);
+}
+.gal-title .eyebrow{font-size:10.5px;letter-spacing:.44em;text-transform:uppercase;color:var(--brass-lt);margin:0 0 12px}
+.gal-title h2{font-family:var(--serif);font-weight:300;font-size:clamp(28px,5vw,54px);margin:0}
+
+/* ============================ ACT VI — L'ADRESSE ============================ */
+#adresse{position:relative;z-index:4;background:var(--ink-2);padding:clamp(64px,9vw,120px) clamp(18px,4vw,46px) 0}
+#adresse .inner{width:min(92vw,1180px);margin:0 auto;display:grid;gap:clamp(30px,5vw,70px);grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))}
+#adresse .eyebrow{font-size:10.5px;letter-spacing:.44em;text-transform:uppercase;color:var(--brass-lt);margin:0 0 16px}
+#adresse h2{font-family:var(--serif);font-weight:300;font-size:clamp(28px,4.4vw,50px);line-height:1.1;margin:0 0 30px}
+.rows{display:grid;gap:0;max-width:440px}
+.rows div{display:grid;grid-template-columns:104px 1fr;gap:14px;padding:15px 0;border-bottom:1px solid rgba(244,239,228,.13)}
+.rows dt,.rows span:first-child{font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);padding-top:3px}
+.rows a:hover{color:var(--brass-lt)}
+.btns{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.btn{
+  position:relative;overflow:hidden;display:inline-flex;align-items:center;gap:9px;
+  padding:15px 28px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+  border:1px solid rgba(244,239,228,.3);transition:color .4s var(--ease),border-color .4s var(--ease);
+}
+.btn i{position:absolute;inset:0;background:var(--brass-lt);transform:scaleY(0);transform-origin:bottom;transition:transform .45s var(--ease);z-index:-1}
+.btn span{position:relative;z-index:1}
+.btn:hover{color:var(--ink);border-color:var(--brass-lt)}
+.btn:hover i{transform:scaleY(1)}
+.btn.solid{background:var(--brass-lt);color:var(--ink);border-color:var(--brass-lt)}
+.btn.solid i{background:transparent;border:1px solid var(--brass-lt)}
+.btn.solid:hover{background:transparent;color:var(--brass-lt)}
+.map{border:1px solid rgba(244,239,228,.16);padding:9px;background:rgba(244,239,228,.03)}
+.map iframe{width:100%;aspect-ratio:4/3;border:0;display:block;filter:grayscale(.35) contrast(.95) brightness(.9)}
+.map + p{font-size:13px;line-height:1.7;color:var(--muted);margin:13px 0 0}
+
+.hours{margin-top:clamp(48px,7vw,84px);border-top:1px solid rgba(244,239,228,.13);padding-top:clamp(34px,5vw,52px)}
+.hours .wrap{width:min(92vw,1180px);margin:0 auto;display:grid;gap:clamp(20px,4vw,56px);grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr))}
+.hours .r{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:13px 0;border-bottom:1px solid rgba(244,239,228,.1)}
+.hours .r.today{color:var(--brass-lt)}
+.hours .r span:first-child{font-size:13.5px}
+.hours .r span:last-child{font-family:var(--serif);font-size:18px}
+
+footer{background:var(--ink-2);padding:clamp(50px,7vw,80px) clamp(18px,4vw,46px) 34px;margin-top:clamp(48px,7vw,80px);border-top:1px solid rgba(244,239,228,.1)}
+footer .inner{width:min(92vw,1180px);margin:0 auto}
+footer .cols{display:grid;gap:32px;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));padding-bottom:38px}
+footer .cols h4{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--brass-lt);margin:0 0 14px;font-weight:400}
+footer .cols p,footer .cols a{font-size:14px;line-height:1.9;color:var(--muted);margin:0;display:block}
+footer .cols a:hover{color:var(--paper)}
+footer .lg{font-family:var(--serif);font-size:25px;color:var(--paper);margin:0 0 10px}
+footer .lg + p{font-family:var(--serif);font-style:italic;font-size:15px}
+footer .base{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;padding-top:24px;border-top:1px solid rgba(244,239,228,.1);font-size:12px;color:rgba(244,239,228,.42)}
+
+/* ---------- ornament ---------- */
+.orn{display:flex;align-items:center;justify-content:center;gap:16px;padding:clamp(34px,5vw,60px) 0;color:var(--brass)}
+
+/* ---------- reduced motion / no-JS fallback ---------- */
+@media(prefers-reduced-motion:reduce){
+  #overture{display:none}
+  .act{height:auto !important}
+  .stage{position:relative;height:auto;min-height:0;padding:clamp(56px,9vw,100px) 18px;display:block;perspective:none}
+  .world,.tunnel-cam,.deck,.drum{position:relative;inset:auto;transform:none !important;left:auto;top:auto;width:auto;height:auto}
+  .plane,.card,.pane{position:relative;left:auto;top:auto;margin:0 auto 26px;transform:none !important;opacity:1 !important;width:min(92vw,420px);height:auto}
+  .hero-crest,.hero-far,.hero-glow,.cue,.deck-nav{display:none}
+  .hero-title .ch{transform:none !important;opacity:1 !important}
+  .story-line{transform:none !important;opacity:1 !important}
+  .carte-head,.gal-title,.tunnel-legend,.hero-sub{position:relative;left:auto;top:auto;bottom:auto;transform:none;margin:0 auto 34px}
+  .cat{opacity:1;transform:none}
+  .story-art .b{position:relative;right:auto;bottom:auto;width:60%;margin-top:14px}
+}
+</style>
+</head>
+<body>
+
+<div id="overture">
+  <svg class="crest" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width="1.1">
+    <circle cx="60" cy="60" r="52" style="--len:340"/>
+    <circle cx="60" cy="60" r="45" stroke-width=".5" style="--len:290"/>
+    <path d="M60 14c-10 12-10 22 0 30 10-8 10-18 0-30z" style="--len:90"/>
+    <path d="M38 96c8-5 36-5 44 0" style="--len:60"/>
+    <line x1="60" y1="99" x2="60" y2="106" style="--len:12"/>
+  </svg>
+  <div class="mark">Bonjour Mery</div>
+</div>
+
+<div id="grain"></div>
+<div id="vignette"></div>
+<div id="rail"><i></i></div>
+
+<nav id="nav">
+  <a href="#top" class="logo">Bonjour&nbsp;Mery</a>
+  <div class="links">
+    <a href="#act-story">Historia</a>
+    <a href="#act-carte">Karta</a>
+    <a href="#act-gal">Galeria</a>
+    <a href="#adresse">Adres</a>
+  </div>
+</nav>
+
+<!-- ========================= ACT I ========================= -->
+<section class="act" id="act-hero">
+  <div class="stage" id="top">
+    <div class="world">
+      <div class="hero-far"  data-d="0.10"></div>
+      <div class="hero-glow" data-d="0.20"></div>
+      <svg class="hero-crest" viewBox="0 0 120 120" fill="none" stroke="currentColor" stroke-width=".7" data-d="0.34" style="transform:translate(-50%,-50%)">
+        <circle cx="60" cy="60" r="52"/><circle cx="60" cy="60" r="45" stroke-width=".35"/>
+        <path d="M60 14c-10 12-10 22 0 30 10-8 10-18 0-30z"/><path d="M38 96c8-5 36-5 44 0"/>
+      </svg>
+    </div>
+
+    <h1 class="hero-title" id="heroTitle">
+      <span class="ln"><span class="ch">B</span><span class="ch">o</span><span class="ch">n</span><span class="ch">j</span><span class="ch">o</span><span class="ch">u</span><span class="ch">r</span><span class="ch">,</span></span>
+      <span class="ln"><span class="ch">o</span><span class="ch">n</span><span class="ch">&nbsp;</span><span class="ch">e</span><span class="ch">s</span><span class="ch">t</span><span class="ch">&nbsp;</span><span class="ch">l</span><span class="ch">à</span><span class="ch">.</span></span>
+    </h1>
+
+    <div class="hero-sub" id="heroSub">
+      <p class="eyebrow">Cieplice Śląskie Zdrój · Plac Piastowski 21C</p>
+      <p>Kawiarnia śniadaniowa w rytmie uzdrowiska. Croissanty prosto z pieca, crêpes na cienko, kawa parzona bez pośpiechu — codziennie od 9:00.</p>
+    </div>
+
+    <div class="cue"><span></span>Przewiń</div>
+  </div>
+</section>
+
+<!-- ========================= ACT II ========================= -->
+<section class="act" id="act-tunnel">
+  <div class="stage">
+    <div class="tunnel-cam" id="cam">
+      <div class="plane" data-x="-38" data-y="-18" data-z="-900">
+        <div class="frame"><img src="assets/croissant.png" alt="Croissant na marmurze" loading="lazy"><div class="cap">le croissant</div></div>
+      </div>
+      <div class="plane" data-x="36" data-y="15" data-z="-1900">
+        <div class="frame"><img src="assets/latte.png" alt="Cappuccino z latte art" loading="lazy"><div class="cap">le café</div></div>
+      </div>
+      <div class="plane" data-x="-34" data-y="17" data-z="-2900">
+        <div class="frame"><img src="assets/croque.jpg" alt="Croque Madame" loading="lazy"><div class="cap">croque madame</div></div>
+      </div>
+      <div class="plane" data-x="38" data-y="-16" data-z="-3900">
+        <div class="frame"><img src="assets/suzette.jpg" alt="Crêpe Suzette" loading="lazy"><div class="cap">crêpe suzette</div></div>
+      </div>
+      <div class="plane" data-x="-36" data-y="-12" data-z="-4900">
+        <div class="frame"><img src="assets/dessert.png" alt="Deser na marmurze" loading="lazy"><div class="cap">le dessert</div></div>
+      </div>
+      <div class="plane" data-x="33" data-y="18" data-z="-5900">
+        <div class="frame"><img src="assets/comptoir.png" alt="Wnętrze, mosiężne detale" loading="lazy"><div class="cap">la salle</div></div>
+      </div>
+    </div>
+    <div class="tunnel-legend" id="tlegend">
+      <h2>Poranek zaczyna się&nbsp;powoli</h2>
+      <p>Masło z małej mleczarni. Ciasto na naleśniki odpoczywające od wieczora. Kawa, przy której nikt nie pogania.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ACT III ========================= -->
+<section class="act" id="act-story">
+  <div class="stage">
+    <div class="story-grid">
+      <div class="story-art" id="storyArt">
+        <div class="a"><img src="assets/marysienka.jpg" alt="Portret Marysieńki z filiżanką" loading="lazy"></div>
+        <div class="b"><img src="assets/croissant.png" alt="Croissant, detal stolika" loading="lazy"></div>
+      </div>
+      <div class="story-copy">
+        <p class="eyebrow">Notre histoire</p>
+        <p class="story-line" data-i="0">Nazwa pochodzi</p>
+        <p class="story-line" data-i="1">od Marysieńki —</p>
+        <p class="story-line" data-i="2">królowej, która</p>
+        <p class="story-line" data-i="3">przywiozła kawę</p>
+        <p class="story-line" data-i="4">na polski dwór.</p>
+        <p class="story-body">Jej stylizowany portret, z filiżanką cappuccino w dłoni, wita gości przy wejściu. Reszta jest już całkiem współczesna: speciality z polskiej palarni, chleb na zakwasie i stoliki, przy których można zostać dłużej.</p>
+        <div class="story-stats">
+          <div><b data-count="9">9:00</b><span>Otwieramy</span></div>
+          <div><b data-count="65" data-suffix="+">65+</b><span>Pozycji w karcie</span></div>
+          <div><b data-count="100" data-suffix="%">100%</b><span>Świeże co dnia</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================= ACT IV ========================= -->
+<section class="act" id="act-carte">
+  <div class="stage">
+    <div class="carte-head">
+      <p class="eyebrow">Carte du jour</p>
+      <h2>Karta</h2>
+    </div>
+    <div class="deck" id="deck"></div>
+    <div class="deck-nav" id="deckNav"></div>
+  </div>
+</section>
+
+<div class="carte-full">
+  <div class="inner">
+    <h2>Pełna karta</h2>
+    <p class="sub">Poranne spotkania serwujemy 9:00–13:00. Popołudniami — crêpes, desery i kawa aż do zamknięcia. Karta zmienia się z sezonem, dopytaj o propozycję dnia.</p>
+    <div id="carteFull"></div>
+  </div>
+</div>
+
+<!-- ========================= ACT V ========================= -->
+<section class="act" id="act-gal">
+  <div class="stage">
+    <div class="gal-title">
+      <p class="eyebrow">La galerie</p>
+      <h2>Poranki u Mery</h2>
+    </div>
+    <div class="drum" id="drum"></div>
+  </div>
+</section>
+
+<!-- ========================= ACT VI ========================= -->
+<section id="adresse">
+  <div class="inner">
+    <div>
+      <p class="eyebrow">L'adresse</p>
+      <h2>Plac Piastowski 21C<br>Cieplice, Jelenia Góra</h2>
+      <div class="rows">
+        <div><span>Adres</span><span>Plac Piastowski 21C<br>58-560 Jelenia Góra — Cieplice</span></div>
+        <div><span>Telefon</span><a href="tel:+48000000000">+48 000 000 000</a></div>
+        <div><span>E-mail</span><a href="mailto:bonjour@bonjourmery.pl">bonjour@bonjourmery.pl</a></div>
+        <div><span>Rezerwacje</span><a href="https://www.facebook.com/" target="_blank" rel="noopener">Napisz na Facebooku</a></div>
+      </div>
+      <div class="btns">
+        <a class="btn solid" href="https://maps.google.com/?q=Plac+Piastowski+21C+Cieplice+Jelenia+G%C3%B3ra" target="_blank" rel="noopener"><i></i><span>Otwórz w mapach</span></a>
+        <a class="btn" href="https://www.facebook.com/" target="_blank" rel="noopener"><i></i><span>Facebook</span></a>
+      </div>
+    </div>
+    <div>
+      <div class="map">
+        <iframe title="Mapa — Plac Piastowski 21C, Cieplice" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=Plac%20Piastowski%2021C%2C%2058-560%20Jelenia%20G%C3%B3ra&z=16&output=embed"></iframe>
+      </div>
+      <p>Wejście od strony parku zdrojowego, 3 minuty od Muzeum Przyrodniczego. Parking na Placu Piastowskim.</p>
+    </div>
+  </div>
+
+  <div class="hours">
+    <div class="wrap">
+      <div>
+        <p class="eyebrow">Godziny</p>
+        <div id="hoursList"></div>
+      </div>
+      <div>
+        <p class="eyebrow">Serwis śniadaniowy</p>
+        <div class="r"><span>Codziennie</span><span>9:00–13:00</span></div>
+        <div class="r"><span>Crêpes i desery</span><span>do zamknięcia</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="inner">
+    <div class="cols">
+      <div>
+        <p class="lg">Bonjour Mery</p>
+        <p>Kawiarnia śniadaniowa w Cieplicach</p>
+      </div>
+      <div>
+        <h4>Odwiedź</h4>
+        <p>Plac Piastowski 21C</p>
+        <p>58-560 Jelenia Góra</p>
+      </div>
+      <div>
+        <h4>Godziny</h4>
+        <p>Pon–Czw 9:00–20:00</p>
+        <p>Pt–Nd 9:00–21:00</p>
+      </div>
+      <div>
+        <h4>Social</h4>
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener">Facebook</a>
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener">Instagram</a>
+        <a href="mailto:bonjour@bonjourmery.pl">bonjour@bonjourmery.pl</a>
+      </div>
+    </div>
+    <div class="base">
+      <span>© 2026 Bonjour Mery. Wszystkie prawa zastrzeżone.</span>
+      <span>Polityka prywatności · Regulamin</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+'use strict';
+
+var REDUCED = false;
+try { REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+/* ---------------------------------------------------------- data */
+var MENU = [
+  {n:'Zestawy śniadaniowe', f:'Les petits déjeuners', img:'assets/croque.jpg',
+   note:'Do każdego zestawu podajemy świeże rzemieślnicze pieczywo i masło klasyczne. Napój (americano lub herbata czarna) do zestawu +8 zł.',
+   it:[['Klasyczne','38 zł','Dwie frankfurterki, 2 jaja sadzone, twarożek wiosenny, sałatka ze świeżych warzyw, musztarda, ketchup'],
+       ['Polskie','38 zł','Pieczona biała kiełbaska z cebulką, jajecznica na maśle z 2 jaj, sałatka z ogórkiem kiszonym, musztarda, sos chrzanowy'],
+       ['Niedzielne','38 zł','Jajecznica na maśle z 3 jaj, bekon, pieczarki grillowane, twarożek wiosenny, sałatka ze świeżych warzyw, sos czosnkowy'],
+       ['Angielskie','40 zł','2 jajka sadzone, 3 grillowane kiełbaski, bekon, pieczarki grillowane, fasolka, pieczone pomidorki']]},
+  {n:'Kanapki', f:'Les tartines', img:'assets/croissant.png',
+   note:'Pajda pieczywa pszenno-żytniego na zakwasie, tostowana na maśle, podawana z sałatką ze świeżych warzyw.',
+   it:[['Kanapka Bekon','34 zł','Guacamole, jajecznica na maśle, bekon, roszponka, pomidor malinowy, czerwona cebula, szczypiorek, sól sezamowa'],
+       ['Kanapka Łosoś','36 zł','Serek philadelphia, łosoś wędzony na zimno, ogórek zielony, koperek, kapary, szczypiorek, sos miodowy'],
+       ['Kanapka Burrata','36 zł','Guacamole, rukola, pomidor malinowy, burrata, sól sezamowa, grana padano'],
+       ['Tost po benedyktyńsku','38 zł','Grillowana szynka, 2 jajka w koszulce, sos holenderski, szczypiorek'],
+       ['Croque Madame','38 zł','Szynka podwędzana, ser gruyère, beszamel, musztarda, jajo sadzone, szczypiorek'],
+       ['Cezar 1.0','36 zł','Sałata rzymska, sos cezar, jajko sadzone, bekon, grana padano, szczypiorek']]},
+  {n:'Naleśniki', f:'Les crêpes', img:'assets/suzette.jpg',
+   note:'Francuskie crêpes na słono i na słodko — poranne wersje do 13:00, popołudniowe przez cały dzień, aż do zamknięcia.',
+   it:[['Naleśnik śniadaniowy','30 zł','Cheddar, jajecznica na maśle, bekon, pomidor malinowy, czerwona cebula, rukola, szczypiorek, sos czosnkowy'],
+       ['Naleśnik hiszpański','32 zł','Cheddar, jajecznica na maśle, chorizo, rukola, czerwona cebula, jalapeño, pomidor malinowy, sriracha-majo'],
+       ['Naleśnik nutella','26 zł','Nutella, bita śmietana, owoce sezonowe, polewa czekoladowa'],
+       ['Naleśnik pistacjowy','28 zł','Krem pistacjowy, mus malinowy, bita śmietana, pistacje'],
+       ['Naleśnik banoffee','27 zł','Serek waniliowy, banan, domowy karmel, bita śmietana, orzechy prażone'],
+       ['Naleśnik wiśniowy','27 zł','Serek waniliowy, konfitura wiśniowa, polewa czekoladowa, migdały prażone'],
+       ['Suzette','30 zł','Klasyk francuskiej kuchni — naleśnik w maślanym karmelu i pomarańczach'],
+       ['Naleśnik bazyliowy','32 zł','Mozzarella, pesto bazyliowe, pieczone pomidorki, kurczak grillowany, rukola, grana padano, prażone pestki'],
+       ['Naleśnik łosoś','36 zł','Serek philadelphia, łosoś wędzony na zimno, kapary, koperek, sos miodowy'],
+       ['Naleśnik BBQ','32 zł','Cheddar, szarpany kurczak bbq, jalapeño, czerwona cebula, pomidor, pikle, sriracha-majo'],
+       ['Naleśnik góralski','30 zł','Mozzarella, ser góralski, rukola, żurawina, grana padano, sos czosnkowy, prażone pestki'],
+       ['Naleśnik vege','28 zł','Cheddar, szpinak z czosnkiem, pieczarki grillowane, rukola, sos czosnkowy, prażone pestki']]},
+  {n:'Tosty francuskie', f:'Le pain perdu', img:'assets/dessert.png',
+   note:'Serwis od 9:00 do zamknięcia. Dwa tosty francuskie z chałki na porcję.',
+   it:[['Chałka szarlotka','34 zł','Prażone jabłka, krem mascarpone, domowy sos karmelowy, orzechy prażone'],
+       ['Chałka jagodzianka','34 zł','Jagodowa konfitura, krem mascarpone, migdały'],
+       ['Chałka tropikalna','35 zł','Konfitura mango-marakuja, krem mascarpone, owoce tropikalne, prażony kokos'],
+       ['Chałka pistacjowa','35 zł','Krem pistacjowy, krem mascarpone, mus malinowy, pistacje']]},
+  {n:'Pancakes', f:'Les pancakes', img:'assets/pancakes.jpg',
+   note:'Cztery puszyste amerykańskie naleśniki na porcję.',
+   it:[['Pancakes jagodowy','32 zł','Konfitura jagodowa, bita śmietana, biała czekolada, prażone migdały'],
+       ['Pancakes Raffaello','32 zł','Krem kokosowy, wiórki kokosowe, biała czekolada, mus malinowy'],
+       ['Pancakes czekoladowe','32 zł','Nutella, sos lotus biscoff, bita śmietana, orzechy prażone'],
+       ['Pancakes malina','32 zł','Mus malinowy, bita śmietana, świeże owoce, syrop klonowy'],
+       ['Amerykańska klasyka','34 zł','Jajko sadzone, bekon, masło, syrop klonowy']]},
+  {n:'Desery lodowe', f:'Les coupes glacées', img:'assets/dessert.png',
+   note:'Lody własnej roboty, podawane w pucharku.',
+   it:[['Puchar malinowy','28 zł','3× lody waniliowe, mus malinowy, bita śmietana, migdały prażone, biała czekolada'],
+       ['Puchar wiśniowy','28 zł','1× lody waniliowe, 2× czekoladowe, konfitura wiśniowa, bita śmietana, mleczna czekolada'],
+       ['Puchar owocowy','28 zł','3× lody waniliowe, świeże owoce, galaretka owocowa, bita śmietana, polewa']]},
+  {n:'Menu dziecięce', f:'Pour les petits', img:'assets/croissant.png',
+   note:'Przygotowane z troską o najmłodszych — dopytaj obsługę o możliwość wymiany składników.',
+   it:[['Zestaw z jajeczkiem','22 zł','Jajecznica z 1 jajka bądź jajko sadzone, 2 paróweczki, sałatka ze świeżych warzyw, ketchup'],
+       ['Kanapka z szyneczką','18 zł','Pajda chleba tostowana na maśle, ser żółty, polędwica drobiowa, pomidor malinowy, ogórek, ketchup'],
+       ['Chałka z owocami i serkiem','18 zł','Jeden tost francuski z chałki, serek waniliowy, owoce sezonowe, syrop klonowy, bita śmietana'],
+       ['Pucharek lodowy','22 zł','2 gałki lodów, bita śmietana, posypka, owoce sezonowe, polewa']]},
+  {n:'Napoje gorące', f:'Les boissons chaudes', img:'assets/latte.png',
+   note:'Kawa speciality. Napój roślinny lub mleko bez laktozy +2 zł, syrop smakowy (wanilia / kokos / orzech prażony) +2 zł.',
+   it:[['Espresso / doppio','9 / 11 zł',''],['Americano','13 zł',''],['Americano z mlekiem','14 zł',''],
+       ['Cappuccino','15 zł',''],['Flat White','17 zł',''],['Latte','17 zł',''],
+       ['Kawa po wiedeńsku','17 zł',''],['Matcha Latte','20 zł',''],
+       ['Herbata','14 zł','Earl grey / Ceylon / owocowa'],['Kakao z bitą śmietaną','16 zł','Ze słodkimi piankami']]},
+  {n:'Napoje zimne', f:'Les boissons fraîches', img:'assets/comptoir.png',
+   note:'Koktajle i szprycery — wkrótce.',
+   it:[['Lemoniada','16 zł','Zapytaj obsługę o smaki dnia'],
+       ['Świeży sok owocowo-warzywny','19 zł','Zapytaj obsługę o smaki dnia'],
+       ['Napoje zimne','10 zł','Coca-Cola, Fanta, Sprite, Tonic'],
+       ['Sok owocowy','9 zł',''],['Woda niegaz. / gazowana','5 / 10 zł','300 ml / 1 litr']]},
+  {n:'Menu sezonowe', f:'Les créations saisonnières', img:'assets/latte.png',
+   note:'Autorskie kompozycje napojów na zimno.',
+   it:[['Matcha kokosowa','22 zł','Woda kokosowa, syrop kokosowy'],
+       ['Matcha kokos-mango','22 zł','Napój kokosowy, puree mango, syrop kokosowy'],
+       ['Matcha waniliowa','22 zł','Waniliowy napój grochowy, syrop waniliowy'],
+       ['Spanish Latte','20 zł','Mleko skondensowane, mleko, espresso'],
+       ['Bounty Latte','21 zł','Napój kokosowy, czekolada, syrop kokosowy, espresso'],
+       ['Blueberry Latte','20 zł','Mleko, puree borówkowe, espresso'],
+       ['Kawa mrożona','21 zł','Mleko, espresso, gałka loda waniliowego, bita śmietana']]}
+];
+
+var GALLERY = ['assets/salle.jpg','assets/croque.jpg','assets/latte.png','assets/suzette.jpg',
+               'assets/pancakes.jpg','assets/dessert.png','assets/croissant.png','assets/comptoir.png',
+               'assets/marysienka.jpg'];
+
+var HOURS = [
+  {d:'Poniedziałek – Czwartek', t:'9:00–20:00', days:[1,2,3,4]},
+  {d:'Piątek – Niedziela',      t:'9:00–21:00', days:[5,6,0]}
+];
+
+/* ---------------------------------------------------------- helpers */
+function el(t,c,h){var n=document.createElement(t);if(c)n.className=c;if(h!=null)n.innerHTML=h;return n;}
+function esc(s){return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];});}
+function clamp(v,a,b){return v<a?a:v>b?b:v;}
+function lerp(a,b,t){return a+(b-a)*t;}
+/* smoothstep-ish easing for scrubbed segments */
+function ease(t){t=clamp(t,0,1);return t*t*(3-2*t);}
+/* map v from [a,b] to [0,1] */
+function seg(v,a,b){return clamp((v-a)/(b-a),0,1);}
+
+/* ---------------------------------------------------------- build: hours */
+(function(){
+  var host=document.getElementById('hoursList'); if(!host) return;
+  var today=new Date().getDay();
+  HOURS.forEach(function(h){
+    var on=h.days.indexOf(today)>=0;
+    host.appendChild(el('div','r'+(on?' today':''),'<span>'+esc(h.d)+'</span><span>'+esc(h.t)+'</span>'));
+  });
+})();
+
+/* ---------------------------------------------------------- build: carte deck + full */
+var cards=[];
+(function(){
+  var deck=document.getElementById('deck'), nav=document.getElementById('deckNav'), full=document.getElementById('carteFull');
+  if(!deck||!full) return;
+
+  MENU.forEach(function(c,i){
+    /* --- 3D card (signatures only, keeps the card readable) --- */
+    var card=el('article','card');
+    var top=c.it.slice(0,6);
+    var lis=top.map(function(x){
+      return '<li><em>'+esc(x[0])+'</em><i></i><b>'+esc(x[1])+'</b></li>';
+    }).join('');
+    card.innerHTML =
+      '<div class="cimg"><img src="'+esc(c.img)+'" alt="" loading="lazy"></div>'+
+      '<div class="cbody">'+
+        '<p class="fr">'+esc(c.f)+'</p>'+
+        '<h3>'+esc(c.n)+'</h3>'+
+        '<ul>'+lis+'</ul>'+
+        '<p class="cnt">'+c.it.length+' pozycji — pełna karta niżej</p>'+
+      '</div>';
+    deck.appendChild(card);
+    cards.push(card);
+
+    if(nav) nav.appendChild(el('b'));
+
+    /* --- flat full carte --- */
+    var sec=el('section','cat');
+    var items=c.it.map(function(x){
+      return '<li><div class="row"><strong>'+esc(x[0])+'</strong><i></i><b>'+esc(x[1])+'</b></div>'+
+             (x[2]?'<p class="d">'+esc(x[2])+'</p>':'')+'</li>';
+    }).join('');
+    sec.innerHTML =
+      '<header><h3>'+esc(c.n)+'</h3><em>'+esc(c.f)+'</em></header>'+
+      (c.note?'<p class="note">'+esc(c.note)+'</p>':'')+
+      '<ul>'+items+'</ul>';
+    full.appendChild(sec);
+  });
+
+  /* the deck act needs enough scroll length to walk every card */
+  var actCarte=document.getElementById('act-carte');
+  if(actCarte) actCarte.style.height=(120+MENU.length*46)+'vh';
+})();
+
+/* ---------------------------------------------------------- build: gallery drum */
+var panes=[];
+(function(){
+  var drum=document.getElementById('drum'); if(!drum) return;
+  GALLERY.forEach(function(src){
+    var p=el('div','pane','<div class="b"><img src="'+esc(src)+'" alt="" loading="lazy"></div>');
+    drum.appendChild(p); panes.push(p);
+  });
+})();
+
+/* ---------------------------------------------------------- overture */
+window.addEventListener('load',function(){
+  var o=document.getElementById('overture'); if(!o) return;
+  setTimeout(function(){o.classList.add('done');},REDUCED?0:2100);
+});
+/* safety: never let the curtain trap the page if `load` never fires */
+setTimeout(function(){var o=document.getElementById('overture');if(o)o.classList.add('done');},6000);
+
+/* ---------------------------------------------------------- flat-carte reveal */
+(function(){
+  if(REDUCED||!('IntersectionObserver' in window)) {
+    Array.prototype.forEach.call(document.querySelectorAll('.cat'),function(c){c.classList.add('in');});
+    return;
+  }
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  },{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  Array.prototype.forEach.call(document.querySelectorAll('.cat'),function(c){io.observe(c);});
+})();
+
+/* ---------------------------------------------------------- stat counters */
+(function(){
+  if(REDUCED||!('IntersectionObserver' in window)) return;
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting) return;
+      var n=e.target, to=parseFloat(n.getAttribute('data-count')), sfx=n.getAttribute('data-suffix')||'';
+      if(isNaN(to)){ io.unobserve(n); return; }
+      var isTime = n.textContent.indexOf(':')>=0, t0=performance.now();
+      (function step(now){
+        var p=clamp((now-t0)/1100,0,1), e2=1-Math.pow(1-p,3), v=Math.round(to*e2);
+        n.textContent = isTime ? (v+':00') : (v+sfx);
+        if(p<1) requestAnimationFrame(step);
+      })(t0);
+      io.unobserve(n);
+    });
+  },{threshold:.6});
+  Array.prototype.forEach.call(document.querySelectorAll('[data-count]'),function(n){io.observe(n);});
+})();
+
+/* ==========================================================
+   THE SCROLL ENGINE
+   One rAF loop. Each act computes its own 0→1 progress from
+   its bounding box, then drives real 3D transforms.
+   ========================================================== */
+if(!REDUCED){
+
+  var acts   = [].slice.call(document.querySelectorAll('.act'));
+  var railI  = document.querySelector('#rail i');
+  var nav    = document.getElementById('nav');
+  var chars  = [].slice.call(document.querySelectorAll('#heroTitle .ch'));
+  var heroSub= document.getElementById('heroSub');
+  var heroLayers=[].slice.call(document.querySelectorAll('#act-hero [data-d]'));
+  var cue    = document.querySelector('.cue');
+  var cam    = document.getElementById('cam');
+  var planes = [].slice.call(document.querySelectorAll('.plane'));
+  var tlegend= document.getElementById('tlegend');
+  var storyArt=document.getElementById('storyArt');
+  var lines  = [].slice.call(document.querySelectorAll('.story-line'));
+  var drum   = document.getElementById('drum');
+  var deckNav= [].slice.call(document.querySelectorAll('#deckNav b'));
+
+  /* give each hero letter a deterministic-but-scattered start pose */
+  chars.forEach(function(c,i){
+    c._z  = -900 - ((i*137)%700);
+    c._x  = (((i*89)%100)-50)*3.2;
+    c._y  = (((i*53)%100)-50)*2.4;
+    c._ry = (((i*71)%100)-50)*1.4;
+    c._rx = (((i*29)%100)-50)*0.9;
+    c._d  = (i%chars.length)/chars.length*0.30;   /* stagger */
+  });
+
+  var lastY=-1, navHidden=false, ticking=false;
+
+  /* The hero assembles on load (time-driven) so the landing frame is never
+     blank; scroll is then only responsible for flying it past the camera. */
+  var introT=0, introStart=0;
+  function runIntro(){
+    introStart=performance.now();
+    (function step(now){
+      introT=clamp((now-introStart)/1600,0,1);
+      frame();
+      if(introT<1) requestAnimationFrame(step);
+    })(introStart);
+  }
+
+  function progressOf(act){
+    var r=act.getBoundingClientRect(), vh=window.innerHeight;
+    var span=r.height-vh;
+    if(span<=0) return r.top<=0?1:0;
+    return clamp(-r.top/span,0,1);
+  }
+
+  function frame(){
+    ticking=false;
+    var vh=window.innerHeight, vw=window.innerWidth;
+    var y=window.pageYOffset||document.documentElement.scrollTop||0;
+    var doc=document.documentElement;
+    var max=doc.scrollHeight-vh;
+
+    if(railI) railI.style.width=(max>0?clamp(y/max,0,1)*100:0)+'%';
+
+    /* nav tucks away while scrolling down, returns on scroll up */
+    if(nav){
+      if(lastY>=0){
+        var down = y>lastY+4, up = y<lastY-4;
+        if(down && y>vh*0.6 && !navHidden){ nav.classList.add('tucked'); navHidden=true; }
+        else if(up && navHidden){ nav.classList.remove('tucked'); navHidden=false; }
+      }
+      lastY=y;
+    }
+
+    /* ---------------- ACT I — overture ---------------- */
+    var hero=document.getElementById('act-hero');
+    if(hero){
+      var p=progressOf(hero);
+
+      chars.forEach(function(c){
+        /* letters assemble on load, each over its own slice of the intro */
+        var t=ease(seg(introT, c._d, c._d+0.62));
+        /* scroll then pushes the whole title past the camera */
+        var out=ease(seg(p,0.30,0.95));
+        var z  = lerp(c._z,0,t) + out*1500;
+        var x  = lerp(c._x,0,t);
+        var yy = lerp(c._y,0,t);
+        var ry = lerp(c._ry,0,t);
+        var rx = lerp(c._rx,0,t);
+        c.style.transform='translate3d('+x.toFixed(2)+'px,'+yy.toFixed(2)+'px,'+z.toFixed(2)+'px) rotateY('+ry.toFixed(2)+'deg) rotateX('+rx.toFixed(2)+'deg)';
+        c.style.opacity=(t*(1-out)).toFixed(3);
+      });
+
+      if(heroSub){
+        var st=ease(seg(introT,0.45,1)), so=1-ease(seg(p,0.08,0.30));
+        heroSub.style.transform='translate3d(-50%,'+lerp(26,0,st).toFixed(1)+'px,0)';
+        heroSub.style.opacity=(st*so).toFixed(3);
+      }
+      /* parallax depth layers — deeper layers move least */
+      heroLayers.forEach(function(l){
+        var d=parseFloat(l.getAttribute('data-d'))||0.1;
+        var base=l.classList.contains('hero-crest')?'translate(-50%,-50%) ':'';
+        l.style.transform=base+'translate3d(0,'+(-p*vh*d*0.9).toFixed(1)+'px,0) scale('+(1+p*d*0.5).toFixed(3)+')';
+      });
+      if(cue) cue.style.opacity=(1-ease(seg(p,0,0.14))).toFixed(3);
+    }
+
+    /* ---------------- ACT II — le passage ---------------- */
+    var tun=document.getElementById('act-tunnel');
+    if(tun && cam){
+      var tp=progressOf(tun);
+      var travel=tp*6600;            /* camera flies forward */
+      planes.forEach(function(pl){
+        var z0=parseFloat(pl.getAttribute('data-z'))||0;
+        var z=z0+travel;
+        /* fade in from the depth, blow past the camera */
+        var o;
+        if(z<-2600) o=clamp((z+3400)/800,0,1);
+        else if(z>-160) o=clamp((60-z)/220,0,1);
+        else o=1;
+        var x=(parseFloat(pl.getAttribute('data-x'))||0)/100*vw;
+        var yv=(parseFloat(pl.getAttribute('data-y'))||0)/100*vh;
+        pl.style.transform='translate3d(calc(-50% + '+x.toFixed(1)+'px),calc(-50% + '+yv.toFixed(1)+'px),'+z.toFixed(1)+'px)';
+        pl.style.opacity=o.toFixed(3);
+        pl.style.visibility=o<0.01?'hidden':'visible';
+      });
+      if(tlegend){
+        var lo=ease(seg(tp,0.06,0.2))*(1-ease(seg(tp,0.82,0.98)));
+        tlegend.style.opacity=lo.toFixed(3);
+        tlegend.style.transform='translate3d(-50%,'+lerp(24,0,ease(seg(tp,0.06,0.24))).toFixed(1)+'px,0)';
+      }
+    }
+
+    /* ---------------- ACT III — l'histoire ---------------- */
+    var st=document.getElementById('act-story');
+    if(st){
+      var sp=progressOf(st);
+      lines.forEach(function(ln,i){
+        var a=0.08+i*0.10, t=ease(seg(sp,a,a+0.22));
+        var outT=ease(seg(sp,0.80,1));
+        ln.style.transform='perspective(700px) rotateX('+lerp(72,0,t).toFixed(2)+'deg) translate3d(0,'+lerp(34,0,t).toFixed(1)+'px,0)';
+        ln.style.opacity=(t*(1-outT*0.85)).toFixed(3);
+      });
+      if(storyArt){
+        var at=ease(seg(sp,0,0.5));
+        storyArt.style.transform='perspective(1000px) rotateY('+lerp(-26,0,at).toFixed(2)+'deg) rotateX('+lerp(9,0,at).toFixed(2)+'deg) translate3d(0,'+lerp(50,-30,sp).toFixed(1)+'px,0)';
+      }
+    }
+
+    /* ---------------- ACT IV — la carte (cover-flow deck) ---------------- */
+    var ca=document.getElementById('act-carte');
+    if(ca && cards.length){
+      var cp=progressOf(ca);
+      /* hold a beat at both ends so the first/last card can be read */
+      var f=clamp((cp-0.06)/0.88,0,1)*(cards.length-1);
+      var near=Math.round(f);
+      cards.forEach(function(cd,i){
+        var o=i-f, ao=Math.abs(o);
+        var x=o*Math.min(vw*0.30,300);
+        var z=-ao*300;
+        var ry=clamp(-o*34,-58,58);
+        var sc=1-Math.min(ao*0.10,0.35);
+        cd.style.transform='translate3d(calc(-50% + '+x.toFixed(1)+'px),-50%,'+z.toFixed(1)+'px) rotateY('+ry.toFixed(2)+'deg) scale('+sc.toFixed(3)+')';
+        cd.style.opacity=clamp(1-ao*0.42,0,1).toFixed(3);
+        cd.style.zIndex=String(100-Math.round(ao*10));
+        cd.style.visibility=ao>3.2?'hidden':'visible';
+        if(ao<0.5) cd.classList.add('focus'); else cd.classList.remove('focus');
+      });
+      deckNav.forEach(function(b,i){ b.className = i===near?'on':''; });
+    }
+
+    /* ---------------- ACT V — la galerie (rotating drum) ---------------- */
+    var ga=document.getElementById('act-gal');
+    if(ga && drum && panes.length){
+      var gp=progressOf(ga);
+      var n=panes.length, step=360/n;
+      var radius=Math.max(260,Math.min(vw*0.34,460));
+      var spin=-gp*360;
+      drum.style.transform='translate3d(0,'+lerp(30,-30,gp).toFixed(1)+'px,-'+radius.toFixed(0)+'px) rotateY('+spin.toFixed(2)+'deg) rotateX('+lerp(8,-4,gp).toFixed(2)+'deg)';
+      panes.forEach(function(pn,i){
+        pn.style.transform='rotateY('+(i*step).toFixed(2)+'deg) translateZ('+radius.toFixed(0)+'px)';
+        /* dim the panes facing away from the camera */
+        var ang=((i*step+spin)%360+360)%360;
+        var facing=Math.cos(ang*Math.PI/180);
+        pn.style.opacity=(0.25+0.75*clamp((facing+0.35)/1.35,0,1)).toFixed(3);
+      });
+    }
+  }
+
+  function onScroll(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } }
+  window.addEventListener('scroll',onScroll,{passive:true});
+  window.addEventListener('resize',onScroll,{passive:true});
+  frame();
+
+  /* kick the hero assembly off as the curtain lifts; the fallbacks make sure
+     it runs even if `load` never fires or the curtain is force-dismissed */
+  window.__bmIntro=runIntro;
+  window.addEventListener('load',function(){ setTimeout(runIntro,1700); });
+  setTimeout(function(){ if(!introStart) runIntro(); },6200);
+}
+
+/* ---------------------------------------------------------- smooth anchors */
+[].slice.call(document.querySelectorAll('a[href^="#"]')).forEach(function(a){
+  a.addEventListener('click',function(ev){
+    var id=a.getAttribute('href');
+    if(!id||id==='#') return;
+    var t=document.querySelector(id);
+    if(!t) return;
+    ev.preventDefault();
+    window.scrollTo({top:t.getBoundingClientRect().top+window.pageYOffset,behavior:REDUCED?'auto':'smooth'});
+  });
+});
+
+})();
+</script>
+</body>
+</html>
